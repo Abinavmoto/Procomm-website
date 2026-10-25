@@ -103,6 +103,15 @@ for (const path of pages) {
   check(x.h1.length===1,path+" one H1");
   check(x.width<=x.viewport+2,path+" no horizontal overflow "+x.width+"/"+x.viewport);
   check(x.images.length===0,path+" images loaded");
+  if(path==="applications.html"){
+    const chart=await page.locator(".chart-viewport").evaluate(el=>({
+      scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,
+      keyboardReachable:el.getAttribute("tabindex")==="0",
+      computedOverflow:getComputedStyle(el).overflowX
+    }));
+    check(chart.scrollWidth > chart.clientWidth+40,"applications chart scrolls independently on mobile");
+    check(chart.keyboardReachable && chart.computedOverflow==="auto","applications chart is keyboard-scrollable");
+  }
   await shot(page,path.replace(".html","")+"-mobile");
   await page.close();
 }

@@ -138,6 +138,125 @@
     setInterval(decide, 6000);
   }
 
+  /* Scroll-scrubbed With us / Without us timeline (MicroAGI-style) */
+  (function () {
+    var sec = document.getElementById("overnightSec");
+    if (!sec) return;
+
+    var rows = Array.prototype.map.call(sec.querySelectorAll(".tlx__row"), function (row) {
+      return {
+        track: row.querySelector(".tlx__track"),
+        head: row.querySelector(".tlx__head"),
+        full: row.querySelector(".tlx__prog--full"),
+        dash: row.querySelector(".tlx__prog--dash"),
+        solid: row.querySelector(".tlx__prog--solid"),
+        slow: row.classList.contains("tlx__row--without"),
+        nodes: Array.prototype.slice.call(row.querySelectorAll(".tlx__node")),
+        tw: 1,
+        offs: [],
+        boundary: 1,
+        on: [],
+      };
+    });
+
+    var travel = 1;
+    var sticky = sec.querySelector(".tl-scrub__sticky");
+    var stickyTop = 114;
+
+    function measure() {
+      if (sticky) {
+        var t = parseFloat(window.getComputedStyle(sticky).top);
+        stickyTop = isNaN(t) ? 114 : t;
+      }
+      // Scroll distance while the sticky panel stays locked under the nav
+      travel = Math.max(1, sec.offsetHeight - (window.innerHeight - stickyTop));
+      rows.forEach(function (r) {
+        r.tw = (r.track && r.track.getBoundingClientRect().width) || 1;
+        r.offs = r.nodes.map(function (n) {
+          return n.offsetLeft;
+        });
+        r.boundary = r.nodes[3] ? r.offs[3] : r.tw;
+        r.on = r.nodes.map(function () {
+          return null;
+        });
+        if (r.full) r.full.style.width = r.tw + "px";
+        if (r.dash) r.dash.style.width = r.boundary + "px";
+        if (r.solid) {
+          r.solid.style.left = r.boundary + "px";
+          r.solid.style.width = Math.max(1, r.tw - r.boundary) + "px";
+        }
+      });
+      frame();
+    }
+
+    function frame() {
+      if (prefersReduced) {
+        rows.forEach(function (r) {
+          if (r.head) {
+            r.head.style.transform =
+              "translate3d(" + r.tw + "px,0,0) translate(-50%,-50%)";
+          }
+          if (r.full) r.full.style.transform = "scaleX(1)";
+          if (r.dash) r.dash.style.transform = "scaleX(1)";
+          if (r.solid) r.solid.style.transform = "scaleX(1)";
+          r.nodes.forEach(function (n) {
+            n.classList.add("on");
+          });
+        });
+        return;
+      }
+
+      // Progress starts when the sticky panel locks under the nav (not at y=0)
+      var top = sec.getBoundingClientRect().top;
+      var p = (stickyTop - top) / travel;
+      p = p < 0 ? 0 : p > 1 ? 1 : p;
+
+      rows.forEach(function (r) {
+        // With us runs slightly ahead; Without us trails (pow curve) — both finish by the end
+        var q = r.slow ? Math.pow(p, 1.75) : Math.min(1, p * 1.12);
+        var headX = q * r.tw;
+        if (r.head) {
+          r.head.style.transform =
+            "translate3d(" + headX + "px,0,0) translate(-50%,-50%)";
+        }
+        if (r.full) r.full.style.transform = "scaleX(" + q + ")";
+        if (r.dash) {
+          r.dash.style.transform =
+            "scaleX(" + Math.min(1, headX / Math.max(1, r.boundary)) + ")";
+        }
+        if (r.solid) {
+          var d = r.tw - r.boundary;
+          r.solid.style.transform =
+            "scaleX(" + (d > 0 ? Math.max(0, (headX - r.boundary) / d) : 0) + ")";
+        }
+        r.nodes.forEach(function (n, i) {
+          var on = headX >= r.offs[i] - 2;
+          if (r.on[i] !== on) {
+            n.classList.toggle("on", on);
+            r.on[i] = on;
+          }
+        });
+      });
+    }
+
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        frame();
+        ticking = false;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", measure);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measure);
+    }
+    measure();
+  })();
+
   /* Contact form → mailto */
   var form = document.getElementById("demo-form");
   if (form) {

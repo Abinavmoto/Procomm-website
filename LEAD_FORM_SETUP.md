@@ -1,41 +1,43 @@
-# Enquiry form activation — FlexiFlow / Procomm Dynamics
+# Procomm Dynamics — native HTML email enquiries
 
-**Status:** Needs a real lead endpoint. GitHub Pages is static hosting and does not process submitted forms itself.
+## Selected architecture
 
-## What this website does today
+The lab demo and OEM partnership forms are **native HTML** served by GitHub Pages. They submit directly to **FormSubmit (formsubmit.co)** via ordinary HTML POST. FormSubmit forwards the lead to **info@procommdynamics.com** after the recipient email address is activated. No Procomm CRM or custom database is required for this pilot.
 
-- The visible website no longer launches the visitor's email application without warning.
-- Until `FORM_ENDPOINT` is configured in `js/main.js`, the demo and OEM forms are **hidden**, and each contact page shows the company email as a **clearly labelled manual fallback**.
-- This is intentionally conservative. No lead is stored by merely opening a browser email draft.
-- A generic 2xx response from an endpoint is treated as acceptance **only if the service actually persists the lead**. Verify that end to end.
+**This is a third-party email relay**, not a fully offline or serverless native-only solution. An HTML form on GitHub Pages alone cannot send email.
 
-## Recommended production setup
+### Included behavior
 
-**Option A: Zoho Forms hosted/embedded form (simplest)**
+- `contact.html`: FlexiFlow demo form.
+- `reactor-makers.html`: OEM partnership form.
+- Clear form-specific email subjects; anti-spam honeypot; reCAPTCHA enabled by provider default.
+- Browser-only draft recovery: `js/main.js` stores unfinished fields in `localStorage` (namespaced per form), debounced on input and additionally on pagehide.
+- Drafts are restored after refresh or accidental navigation. When the visitor revisits after more than seven days, the draft is discarded; it can also be cleared manually. Browser storage is not encrypted, and private mode or site data clearing can prevent recovery.
+- Form is submitted through a normal POST. The draft is **not** cleared when the visitor clicks Submit. If the provider redirects to `thanks.html?form=demo` or `thanks.html?form=oem` in the same tab within 30 minutes, `js/thanks.js` clears the matching draft and reports provider acceptance. This is an indicative browser flow, not a cryptographic receipt or proof of email inbox delivery.
+- We do not collect or store leads on a Procomm-owned database, but the third-party provider temporarily handles and retains submitted data and the recipient mailbox retains the delivered email.
+- Never submit confidential formulas, SOP secrets, customer data or sensitive scientific research content through this general-purpose enquiry form.
 
-1. Build a **Lab Demo Enquiry** form in Zoho Forms with: name, organisation, email, reactor type, reactor size, instruments to connect and message.
-2. Build a separate **OEM Partnership Enquiry** form with: name, role, company, work email, website, product line, yearly volume interest, region and message.
-3. Enable supported Zoho CRM integration, correct notification routing, spam protection and privacy/consent settings inside Zoho Forms.
-4. Replace each existing placeholder with the official **Zoho Forms embed/iframe** for the respective form. Avoid embedding an unverified public share URL as an arbitrary POST endpoint.
-5. Test on mobile: submit a real test lead, confirm Zoho Forms stores it, CRM receives it (if configured), notifications are delivered, and the visitor sees an actual success state.
+## One-time activation (required)
 
-**Option B: Your own secure API/edge worker**
+1. Make sure **info@procommdynamics.com** is a real, monitored Zoho Workplace mailbox.
+2. Deploy the GitHub Pages PR and verify that the custom domain has HTTPS enabled.
+3. Submit a **test demo enquiry** from `contact.html`.
+4. Find the FormSubmit activation email in the recipient mailbox (also check spam/quarantine) and confirm it. FormSubmit says submissions made before activation are held until activation.
+5. Submit a second test lead to each form: one demo and one OEM partnership. Confirm **both emails arrive**, with the expected fields and subject line, and verify that a successful POST returns to the thank-you page.
+6. Enter a partial enquiry, reload the browser, confirm fields restore; click **Clear saved draft** and confirm that the data disappears.
+7. Force a failed submit (e.g., disconnect network) and confirm that the draft is retained.
 
-1. Deploy an HTTPS endpoint (e.g. a managed serverless function) that accepts `application/x-www-form-urlencoded` and `form_type`.
-2. Validate and limit inputs, reject spam, enforce rate limits and origin/CORS checks, protect against bots, and handle consent/privacy terms.
-3. Send leads to Zoho CRM or a verified mailbox **server-side**, with secrets only in the server environment.
-4. Return 2xx **only after** the lead was accepted/persisted. Return a non-2xx error on failure so the browser keeps the entered details and displays a retry path.
-5. Set `FORM_ENDPOINT` in `js/main.js` to the verified public endpoint; confirm it accepts both lab-demo and OEM enquiry payloads.
-6. Verify cross-origin requests in Safari/iOS and on the actual custom domain.
+Do not call the forms fully operational before these tests pass. A FormSubmit redirect is not proof that SMTP delivery into Zoho Mail succeeded.
 
-**Never expose a Zoho OAuth token, CRM API key, private webhook secret or SMTP password in GitHub Pages JavaScript.**
+## Vendor / privacy
 
-## Promise / conversion copy
-Use: *“Tell us about your reactor and instruments. Once an online enquiry is successfully received, we review the details and follow up by email.”*  
-Do **not** promise a fixed response time until the team establishes an internal follow-up SLA.
+- Provider: https://formsubmit.co/ — not FormSubmit.io or FormSubmit.app (different services).
+- Provider documentation: https://formsubmit.co/documentation
+- Provider privacy policy: https://formsubmit.co/privacy.pdf
+- Provider publicly states a **30-day submission archive**.
+- Consider publishing a Procomm privacy notice explaining email relay processing, local browser drafts, retention and contact information before production launch.
+- Replace FormSubmit with a controlled endpoint in future if the company requires server-side retention, compliance, account-level access control or data residency commitments.
 
-## Additional before-launch tasks
-- Verify that `info@procommdynamics.com` actually exists and is monitored.
-- Publish appropriate privacy information, including where enquiry data is processed, if applicable.
-- Test screen readers, form keyboard navigation and errors; verify on actual iPhone Safari.
-- Keep the product preview `noindex` until commercial launch is approved.
+## SEO and Go-Live
+
+`index.html` and the other nine primary pages continue to use **noindex** during prelaunch. Remove that only after commercial readiness and HTTPS are verified. `thanks.html` should always remain **noindex**.

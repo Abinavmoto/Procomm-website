@@ -191,7 +191,7 @@
     if (!sec) return;
 
     var mobileMq =
-      window.matchMedia && window.matchMedia("(max-width: 640px)");
+      window.matchMedia && window.matchMedia("(max-width: 820px)");
 
     var rows = Array.prototype.map.call(sec.querySelectorAll(".tlx__row"), function (row) {
       return {
@@ -267,8 +267,14 @@
       var p = (stickyTop - top) / travel;
       p = p < 0 ? 0 : p > 1 ? 1 : p;
 
+      /* With us completes early and holds to the end; Without trails, then section scrolls away */
       rows.forEach(function (r) {
-        var q = r.slow ? Math.pow(p, 1.75) : Math.min(1, p * 1.12);
+        var q;
+        if (r.slow) {
+          q = Math.pow(Math.min(1, Math.max(0, (p - 0.08) / 0.92)), 1.35);
+        } else {
+          q = Math.min(1, p / 0.42);
+        }
         var headX = q * r.tw;
         if (r.head) {
           r.head.style.transform =

@@ -5,104 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Contact — Procomm Dynamics</title>
-<meta name="description" content="Request a FlexiConnect demo. Tell us your reactor size, type and what you want to automate.">
+<meta name="description" content="Request a FlexiFlow demo. Email info@procommdynamics.com.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-
 </head>
-<body>
+<body id="top">
 <div class="preview-flag"><b>DESIGN PREVIEW</b> · not published · concept renders · live data is an illustrative simulation</div>
+<div class="read-progress" id="read-progress" aria-hidden="true"></div>
 
 <nav class="site-nav" id="nav"><div class="wrap nav-in">
   <a href="index.html" aria-label="Procomm Dynamics home">
     <img class="logo-img" src="assets/logo.svg" width="280" height="42" alt="Procomm Dynamics">
   </a>
   <div class="links" id="links">
+    <a href="flexiflow.html">FlexiFlow</a>
     <a href="flexiconnect.html">FlexiConnect</a>
-    <a href="how-it-works.html">How it works</a>
-    <a href="recipes.html">Recipes</a>
-    <a href="integrations.html">Integrations</a>
+    <a href="applications.html">Applications</a>
     <a href="reactor-makers.html">For reactor makers</a>
+    <a href="faq.html">FAQ</a>
     <a href="about.html">About</a>
   </div>
-  <a href="contact.html" class="btn btn-g nav-cta">Request a demo</a>
+  <a href="contact.html" class="btn btn-g nav-cta">Request demo</a>
   <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="links"><span></span><span></span><span></span></button>
 </div></nav>
 
 <header class="page-hero"><div class="wrap">
   <span class="eyebrow">Contact</span>
   <h1>Request a <em>demo.</em></h1>
-  <p class="lead">Tell us about your lab, your reactors and what you would hand over to the machine.</p>
+  <p class="lead">Tell us about your lab, your reactors and the instruments you want connected.</p>
 </div></header>
 
 <section style="padding-top:10px;padding-bottom:120px"><div class="wrap">
   <div class="form-card rv">
     <div>
       <span class="eyebrow">Book a conversation</span>
-      <h2>See the loop on your bench.</h2>
-      <p class="lead">We will follow up by email. Nothing sensitive is stored by this preview form.</p>
+      <h2>See FlexiFlow on your bench.</h2>
+      <p class="lead">We follow up by email at info@procommdynamics.com.</p>
     </div>
-    <form id="demo-form" action="mailto:hello@procommdynamics.com" method="post" enctype="text/plain">
-      <div>
-        <label for="name">Name</label>
-        <input id="name" name="name" autocomplete="name" required placeholder="Your name">
+    <div>
+      <div id="form-success" tabindex="-1" hidden>
+        <h3 style="font-size:24px;margin-bottom:8px">Thank you.</h3>
+        <p>If your email client opened, send the message to finish. Otherwise email us at <a href="mailto:info@procommdynamics.com">info@procommdynamics.com</a>.</p>
       </div>
-      <div>
-        <label for="org">Organisation</label>
-        <input id="org" name="organisation" autocomplete="organization" placeholder="Lab or company">
-      </div>
-      <div class="full">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@lab.com">
-      </div>
-      <div>
-        <label for="reactor-size">Reactor size</label>
-        <select id="reactor-size" name="reactor_size">
-          <option value="">Select…</option>
-          <option>1–5 L</option>
-          <option>5–20 L</option>
-          <option>20–50 L</option>
-          <option>Other / mixed</option>
-        </select>
-      </div>
-      <div>
-        <label for="reactor-type">Reactor type</label>
-        <select id="reactor-type" name="reactor_type">
-          <option value="">Select…</option>
-          <option>Jacketed glass</option>
-          <option>Jacketed glass + overhead stirrer</option>
-          <option>Other lab reactor</option>
-        </select>
-      </div>
-      <div class="full">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="Instruments on the bench, processes you want to automate"></textarea>
-      </div>
-      <div class="full form-actions">
-        <button class="btn btn-g" type="submit">Request a demo <span class="ar" aria-hidden="true">→</span></button>
-        <span class="form-note">Uses mailto for now. Swap action for Zoho when ready.</span>
-      </div>
-    </form>
+      <form id="demo-form" action="#" method="post">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" name="name" autocomplete="name" required>
+        </div>
+        <div>
+          <label for="org">Organisation</label>
+          <input id="org" name="organisation" autocomplete="organization">
+        </div>
+        <div class="full">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div>
+          <label for="reactor-type">Reactor type</label>
+          <input id="reactor-type" name="reactor_type">
+        </div>
+        <div>
+          <label for="reactor-size">Reactor size</label>
+          <input id="reactor-size" name="reactor_size">
+        </div>
+        <div class="full">
+          <label for="instruments">Instruments you want connected</label>
+          <input id="instruments" name="instruments">
+        </div>
+        <div class="full">
+          <label for="message">Message</label>
+          <textarea id="message" name="message"></textarea>
+        </div>
+        <div class="full form-actions">
+          <button class="btn btn-g" type="submit">Request a demo <span class="ar" aria-hidden="true">→</span></button>
+          <span class="form-note">Uses mailto until FORM_ENDPOINT is set in js/main.js.</span>
+        </div>
+      </form>
+    </div>
   </div>
 </div></section>
 
 <footer class="site-footer"><div class="wrap foot">
-  <a href="index.html" aria-label="Procomm Dynamics home">
-    <img class="logo-img" src="assets/logo.svg" width="220" height="33" alt="Procomm Dynamics">
-  </a>
+  <div>
+    <a href="index.html" aria-label="Procomm Dynamics home">
+      <img class="logo-img" src="assets/logo.svg" width="220" height="33" alt="Procomm Dynamics">
+    </a>
+    <p class="brand-line" style="margin-top:12px">Machines with Context.</p>
+  </div>
   <div class="foot-links">
+    <a href="flexiflow.html">FlexiFlow</a>
     <a href="flexiconnect.html">FlexiConnect</a>
-    <a href="how-it-works.html">How it works</a>
-    <a href="recipes.html">Recipes</a>
-    <a href="integrations.html">Integrations</a>
+    <a href="applications.html">Applications</a>
     <a href="reactor-makers.html">Reactor makers</a>
+    <a href="faq.html">FAQ</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
   </div>
-  <span class="mono">© 2026 Procomm Dynamics · physical AI for the chemistry lab</span>
+  <div class="foot-meta">
+    <span>Made in Madurai for the world.</span>
+    <a href="mailto:info@procommdynamics.com">info@procommdynamics.com</a>
+    <span class="mono">© 2026 Procomm Dynamics</span>
+  </div>
 </div></footer>
+<a href="#top" class="back-top" id="back-top" aria-label="Back to top">↑</a>
 <script src="js/main.js" defer></script>
 </body>
 </html>

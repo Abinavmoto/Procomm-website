@@ -1,6 +1,14 @@
-/* Procomm Dynamics — site behaviour */
+/* Procomm Dynamics — site behaviour
+ *
+ * Contact form: set FORM_ENDPOINT to your Zoho Forms (or other) URL to POST
+ * as application/x-www-form-urlencoded. Leave empty to fall back to mailto.
+ * Zoho: Forms → Share → embed / permalink; map field names to the form ids below.
+ */
 (function () {
   "use strict";
+
+  var FORM_ENDPOINT = "";
+  var MAILTO = "info@procommdynamics.com";
 
   var prefersReduced =
     window.matchMedia &&
@@ -10,7 +18,6 @@
     document.documentElement.classList.add(prefersReduced ? "reduced" : "static");
   }
 
-  /* Freeze SVG SMIL animations when reduced motion is preferred */
   if (prefersReduced) {
     document.querySelectorAll("animate, animateMotion, animateTransform").forEach(function (el) {
       try {
@@ -21,15 +28,27 @@
     });
   }
 
-  /* Sticky nav border on scroll */
-  var nav = document.getElementById("nav");
-  if (nav) {
-    var onScroll = function () {
-      nav.classList.toggle("sc", window.scrollY > 10);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+  /* Top progress bar */
+  var progress = document.getElementById("read-progress");
+  function updateProgress() {
+    if (!progress) return;
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    var p = max > 0 ? window.scrollY / max : 0;
+    progress.style.transform = "scaleX(" + Math.min(1, Math.max(0, p)) + ")";
   }
+
+  /* Sticky nav shrink */
+  var nav = document.getElementById("nav");
+  function onScrollChrome() {
+    if (nav) nav.classList.toggle("sc", window.scrollY > 10);
+    if (nav) nav.classList.toggle("nav-shrink", window.scrollY > 40);
+    updateProgress();
+    var topBtn = document.getElementById("back-top");
+    if (topBtn) topBtn.classList.toggle("show", window.scrollY > 600);
+  }
+  onScrollChrome();
+  window.addEventListener("scroll", onScrollChrome, { passive: true });
 
   /* Mobile menu */
   var burger = document.getElementById("burger");
@@ -44,6 +63,15 @@
         links.classList.remove("open");
         burger.setAttribute("aria-expanded", "false");
       });
+    });
+  }
+
+  /* Back to top */
+  var backTop = document.getElementById("back-top");
+  if (backTop) {
+    backTop.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: prefersReduced ? "auto" : "smooth" });
     });
   }
 
@@ -69,20 +97,39 @@
     });
   }
 
-  /* Hero illustrative simulation */
+  /* Soft page enter */
+  document.documentElement.classList.add("page-ready");
+
+  /* Hero parallax on reactor scene */
   var scene = document.getElementById("scene");
+  if (scene && !prefersReduced) {
+    var hero = document.querySelector(".hero");
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (!hero) return;
+        var rect = hero.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        var y = Math.min(24, Math.max(-12, -rect.top * 0.06));
+        scene.style.transform = "translate3d(0," + y + "px,0)";
+      },
+      { passive: true }
+    );
+  }
+
+  /* Hero illustrative simulation — recipe-engine events only */
   if (scene && !prefersReduced) {
     var $ = function (id) {
       return document.getElementById(id);
     };
     var toast = $("toast");
     var t = 0;
-    var dose = 18.2;
+    var dose = 18.4;
     var msgs = [
-      "Hold extended +4 min: temperature not yet stable",
-      "Dose rate held at 0.74 mL/min: T_reactor within band",
-      "Stirrer torque nominal: continue step 05",
-      "Ramp paused 20 s: jacket lagging setpoint",
+      "Step 4 · Seed · hold 30 min",
+      "Dose 18.4 / 33.3 mL",
+      "Step 5 · Antisolvent dose in progress",
+      "Step 3 · Cool to 60 °C at 0.2 °C/min",
     ];
     var mi = 0;
     var pad = function (n) {
@@ -114,7 +161,7 @@
       if ($("v-rpm"))
         $("v-rpm").textContent = String(Math.round(300 + (Math.random() - 0.5) * 4));
       dose += 0.12;
-      if (dose > 33.3) dose = 18.2;
+      if (dose > 33.3) dose = 18.4;
       if ($("v-dose")) $("v-dose").textContent = dose.toFixed(1);
     }, 900);
 
@@ -138,7 +185,7 @@
     setInterval(decide, 6000);
   }
 
-  /* Scroll-scrubbed With us / Without us timeline (MicroAGI-style) */
+  /* Scroll-scrubbed With us / Without us timeline */
   (function () {
     var sec = document.getElementById("overnightSec");
     if (!sec) return;
@@ -165,10 +212,9 @@
 
     function measure() {
       if (sticky) {
-        var t = parseFloat(window.getComputedStyle(sticky).top);
-        stickyTop = isNaN(t) ? 114 : t;
+        var topVal = parseFloat(window.getComputedStyle(sticky).top);
+        stickyTop = isNaN(topVal) ? 114 : topVal;
       }
-      // Scroll distance while the sticky panel stays locked under the nav
       travel = Math.max(1, sec.offsetHeight - (window.innerHeight - stickyTop));
       rows.forEach(function (r) {
         r.tw = (r.track && r.track.getBoundingClientRect().width) || 1;
@@ -206,13 +252,11 @@
         return;
       }
 
-      // Progress starts when the sticky panel locks under the nav (not at y=0)
       var top = sec.getBoundingClientRect().top;
       var p = (stickyTop - top) / travel;
       p = p < 0 ? 0 : p > 1 ? 1 : p;
 
       rows.forEach(function (r) {
-        // With us runs slightly ahead; Without us trails (pow curve) — both finish by the end
         var q = r.slow ? Math.pow(p, 1.75) : Math.min(1, p * 1.12);
         var headX = q * r.tw;
         if (r.head) {
@@ -240,62 +284,157 @@
     }
 
     var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        frame();
-        ticking = false;
-      });
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          frame();
+          ticking = false;
+        });
+      },
+      { passive: true }
+    );
     window.addEventListener("resize", measure);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(measure);
-    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     measure();
   })();
 
-  /* Contact form → mailto */
+  /* FAQ accordion */
+  document.querySelectorAll(".faq-item").forEach(function (item) {
+    var btn = item.querySelector(".faq-q");
+    var panel = item.querySelector(".faq-a");
+    if (!btn || !panel) return;
+    btn.addEventListener("click", function () {
+      var open = item.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      panel.hidden = !open;
+    });
+  });
+
+  /* Contact / demo form */
   var form = document.getElementById("demo-form");
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      var note = form.querySelector(".form-note");
+      var success = document.getElementById("form-success");
       var name = (form.querySelector("#name") || {}).value || "";
       var org = (form.querySelector("#org") || {}).value || "";
       var email = (form.querySelector("#email") || {}).value || "";
       var size = (form.querySelector("#reactor-size") || {}).value || "";
       var type = (form.querySelector("#reactor-type") || {}).value || "";
+      var instruments = (form.querySelector("#instruments") || {}).value || "";
       var message = (form.querySelector("#message") || {}).value || "";
-      var note = form.querySelector(".form-note");
 
-      if (!email) {
-        if (note) note.textContent = "Please enter an email address.";
+      form.querySelectorAll(".field-error").forEach(function (el) {
+        el.remove();
+      });
+      form.querySelectorAll("[aria-invalid]").forEach(function (el) {
+        el.removeAttribute("aria-invalid");
+      });
+
+      var ok = true;
+      function fail(id, msg) {
+        var field = form.querySelector("#" + id);
+        if (!field) return;
+        field.setAttribute("aria-invalid", "true");
+        var err = document.createElement("p");
+        err.className = "field-error";
+        err.textContent = msg;
+        field.parentNode.appendChild(err);
+        ok = false;
+      }
+
+      if (!name.trim()) fail("name", "Please enter your name.");
+      if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        fail("email", "Please enter a valid email.");
+      }
+      if (!ok) {
+        if (note) note.textContent = "Please fix the highlighted fields.";
         return;
       }
 
-      var body = [
-        "Name: " + name,
-        "Organisation: " + org,
-        "Email: " + email,
-        "Reactor size: " + size,
-        "Reactor type: " + type,
-        "",
-        message,
-      ].join("\n");
+      var payload = {
+        name: name.trim(),
+        organisation: org.trim(),
+        email: email.trim(),
+        reactor_type: type.trim(),
+        reactor_size: size.trim(),
+        instruments: instruments.trim(),
+        message: message.trim(),
+      };
 
-      var mailto =
-        "mailto:hello@procommdynamics.com?subject=" +
+      function showSuccess() {
+        form.hidden = true;
+        if (success) {
+          success.hidden = false;
+          success.focus();
+        }
+      }
+
+      if (FORM_ENDPOINT) {
+        var body = Object.keys(payload)
+          .map(function (k) {
+            return encodeURIComponent(k) + "=" + encodeURIComponent(payload[k]);
+          })
+          .join("&");
+        fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body,
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error("submit failed");
+            showSuccess();
+          })
+          .catch(function () {
+            if (note) {
+              note.textContent =
+                "Could not reach the form endpoint. Opening email instead…";
+            }
+            window.location.href =
+              "mailto:" +
+              MAILTO +
+              "?subject=" +
+              encodeURIComponent("Demo request — " + (org || name || "lab")) +
+              "&body=" +
+              encodeURIComponent(
+                [
+                  "Name: " + payload.name,
+                  "Organisation: " + payload.organisation,
+                  "Email: " + payload.email,
+                  "Reactor type: " + payload.reactor_type,
+                  "Reactor size: " + payload.reactor_size,
+                  "Instruments: " + payload.instruments,
+                  "",
+                  payload.message,
+                ].join("\n")
+              );
+          });
+        return;
+      }
+
+      window.location.href =
+        "mailto:" +
+        MAILTO +
+        "?subject=" +
         encodeURIComponent("Demo request — " + (org || name || "lab")) +
         "&body=" +
-        encodeURIComponent(body);
-
-      if (note) {
-        note.textContent =
-          "Opening your email client… Swap form action for Zoho when ready.";
-      }
-      window.location.href = mailto;
+        encodeURIComponent(
+          [
+            "Name: " + payload.name,
+            "Organisation: " + payload.organisation,
+            "Email: " + payload.email,
+            "Reactor type: " + payload.reactor_type,
+            "Reactor size: " + payload.reactor_size,
+            "Instruments: " + payload.instruments,
+            "",
+            payload.message,
+          ].join("\n")
+        );
+      showSuccess();
     });
   }
 })();

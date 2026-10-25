@@ -39,6 +39,8 @@ for (const { name, w, h } of sizes) {
     const products = document.querySelector("#products");
     const cards = [...products.querySelectorAll(".product-card")];
     const rect = (x) => {const r=x.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,top:r.top,bottom:r.bottom,height:r.height};};
+    const headingStyle = getComputedStyle(h1);
+    const headingLines = Math.round(h1.getBoundingClientRect().height / parseFloat(headingStyle.lineHeight));
     return {
       documentWidth: document.documentElement.scrollWidth,
       viewportWidth: innerWidth,
@@ -46,7 +48,7 @@ for (const { name, w, h } of sizes) {
       h1: rect(h1), products: rect(products),
       productCards: cards.map(rect),
       img: [...document.images].map(x=>({src:x.src.split("/").pop(),ok:x.complete&&x.naturalWidth>0})),
-      visibleText: h1.innerText,
+      visibleText: h1.innerText, headingLines,
       nav: rect(document.querySelector(".site-nav")),
       totalHeight: document.documentElement.scrollHeight
     };
@@ -55,12 +57,21 @@ for (const { name, w, h } of sizes) {
   check(m.documentWidth <= w + 2 && m.bodyWidth <= w + 2, name + " no horizontal overflow (" + m.documentWidth + "/" + w + ")");
   check(m.visibleText.toLowerCase().includes("experience") && m.visibleText.toLowerCase().includes("truly automated"),name + " headline");
   check(m.h1.left >= -2 && m.h1.right <= w + 2,name + " headline within viewport");
+  if (name==="1440" || name==="390") check(m.headingLines===2,name+" hero tagline uses exactly two lines (got "+m.headingLines+")");
   check(m.productCards.length===2 && m.productCards.every(c=>c.width > 200),name + " both product cards rendered");
   check(m.img.every(x=>x.ok),name + " images loaded (" + m.img.filter(x=>!x.ok).map(x=>x.src).join(",") + ")");
   await shot(page, "home-" + name + "-first");
   await page.locator("#products").scrollIntoViewIfNeeded();
   await page.waitForTimeout(200);
   await shot(page, "products-" + name + "-first");
+  if (process.env.QA_BASE64 === "1" && name === "390") {
+    const image = await page.locator(".product-card--connect").screenshot({type:"jpeg",quality:36});
+    console.log("QA_IMAGE_BEGIN:hardware-card-390:"+image.toString("base64")+":QA_IMAGE_END");
+  }
+  if (process.env.QA_BASE64 === "1" && name === "1440") {
+    const image = await page.locator(".brand-hero__visual").screenshot({type:"jpeg",quality:32});
+    console.log("QA_IMAGE_BEGIN:hero-stage-1440:"+image.toString("base64")+":QA_IMAGE_END");
+  }
   if (name === "390") {
     const menu = page.locator("#burger");
     if (await menu.isVisible()) {

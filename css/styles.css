@@ -3192,3 +3192,22 @@ html.reduced body {
   }
   .product-card__hardware-note { top: 8px; bottom: auto; font-size: 8px; }
 }
+
+
+/* Mobile chart detail: preserve legible labels without page-wide overflow. */
+.chart-viewport {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #91a69f #eff3f1;
+  overscroll-behavior-inline: contain;
+}
+.chart-viewport:focus-visible { outline: 2px solid #14a565; outline-offset: 2px; }
+.chart-viewport .chart { width: 100%; max-width: 100%; height: auto; }
+.chart-scroll-hint { display: none; }
+@media (max-width: 640px) {
+  .chart-viewport .chart { width: 720px; min-width: 720px; max-width: none; height: auto; }
+  .chart-scroll-hint { display: block; margin: 9px 0 16px; color: #65777d; font: 11px/1.55 var(--mono); }
+}

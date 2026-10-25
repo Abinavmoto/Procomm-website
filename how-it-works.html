@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>How it works — Procomm Dynamics</title>
+<meta name="description" content="Recipes run on FlexiConnect. An independent safety layer protects the reactor. Every step is logged and signed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+<div class="preview-flag"><b>DESIGN PREVIEW</b> · not published · concept renders · live data is an illustrative simulation</div>
+
+<nav class="site-nav" id="nav"><div class="wrap nav-in">
+  <a href="index.html" aria-label="Procomm Dynamics home">
+    <img class="logo-img" src="assets/logo.svg" width="280" height="42" alt="Procomm Dynamics">
+  </a>
+  <div class="links" id="links">
+    <a href="flexiconnect.html">FlexiConnect</a>
+    <a href="how-it-works.html" aria-current="page">How it works</a>
+    <a href="recipes.html">Recipes</a>
+    <a href="integrations.html">Integrations</a>
+    <a href="reactor-makers.html">For reactor makers</a>
+    <a href="about.html">About</a>
+  </div>
+  <a href="contact.html" class="btn btn-g nav-cta">Request a demo</a>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="links"><span></span><span></span><span></span></button>
+</div></nav>
+
+<header class="page-hero"><div class="wrap">
+  <span class="eyebrow">How it works</span>
+  <h1>The recipe runs on the <em>controller.</em></h1>
+  <p class="lead">Safety is independent of software. Every step and sensor value is logged and signed.</p>
+</div></header>
+
+<section style="padding-top:20px"><div class="wrap">
+  <div class="prose-grid">
+    <article class="rv">
+      <span class="n">01</span>
+      <h3>Recipe on-device</h3>
+      <p>The crystallisation or process recipe executes inside FlexiConnect. The C99 engine steps ramps, holds and doses at a 10&nbsp;ms tick, beside the reactor, not in a remote service.</p>
+    </article>
+    <article class="rv" style="--d:.08s">
+      <span class="n">02</span>
+      <h3>Independent safety layer</h3>
+      <p>A hardware safety stop sits outside the control software path. If software misbehaves, the stop still works.</p>
+    </article>
+    <article class="rv" style="--d:.16s">
+      <span class="n">03</span>
+      <h3>Signed record</h3>
+      <p>Every setpoint, reading, quality flag, dose and operator action is written into a Part&nbsp;11-style audit log on one timeline.</p>
+    </article>
+  </div>
+</div></section>
+
+<section class="grey gridbg"><div class="wrap">
+  <div class="sec-idx rv"><span>// CLOSED LOOP</span><span>SENSE · DECIDE · ACT</span></div>
+  <div class="loop-grid">
+    <div class="rv"><svg viewBox="0 0 500 500" class="loop-svg" role="img" aria-label="Closed loop: sense, decide, act" width="500" height="500">
+<defs><marker id="ah2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1fc37a"/></marker></defs>
+<circle cx="250" cy="250" r="175" class="ring"/>
+<circle cx="250" cy="250" r="115" class="ring2"/>
+<path d="M315.6 87.7 A175 175 0 0 1 423.3 274.4" class="arc" marker-end="url(#ah2)"/>
+<path d="M357.7 387.9 A175 175 0 0 1 142.3 387.9" class="arc" marker-end="url(#ah2)"/>
+<path d="M76.7 274.4 A175 175 0 0 1 184.4 87.7" class="arc" marker-end="url(#ah2)"/>
+<g class="node"><circle cx="250.0" cy="75.0" r="54"/><text x="250.0" y="69.0" class="nn">01</text><text x="250.0" y="93.0" class="nl">Sense</text></g>
+<g class="node"><circle cx="401.6" cy="337.5" r="54"/><text x="401.6" y="331.5" class="nn">02</text><text x="401.6" y="355.5" class="nl">Decide</text></g>
+<g class="node"><circle cx="98.4" cy="337.5" r="54"/><text x="98.4" y="331.5" class="nn">03</text><text x="98.4" y="355.5" class="nl">Act</text></g>
+<text x="250" y="242" class="cl1">REACTION</text>
+<text x="250" y="266" class="cl2">closed loop · on‑device</text>
+</svg></div>
+    <div>
+      <h2 class="rv" style="margin-bottom:40px">What happens each tick.</h2>
+      <ul class="lsteps">
+        <li class="rv"><span class="n">01</span><div><h3>Sense</h3><p>Read RTDs, analog loops and digital lines. Attach a quality flag. Timestamp everything.</p></div></li>
+        <li class="rv" style="--d:.1s"><span class="n">02</span><div><h3>Decide</h3><p>Compare against the recipe step. Extend a hold, slow a dose, or enter a safe state when inputs are wrong.</p></div></li>
+        <li class="rv" style="--d:.2s"><span class="n">03</span><div><h3>Act</h3><p>Drive AO/DO and serial instruments. Write the reason into the audit log.</p></div></li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section class="safety"><div class="wrap">
+  <div class="rv"><span class="eyebrow">Fail-safe principles</span><h2 style="margin-top:22px;max-width:900px">Four rules that never bend.</h2></div>
+  <div class="safe-grid rv">
+    <div><span class="sn">01</span><h4>Sensor loss never counts as done.</h4><p>A missing reading stops the step. It never passes it.</p></div>
+    <div><span class="sn">02</span><h4>A short dose blocks the next step.</h4><p>No moving on until the right amount is in.</p></div>
+    <div><span class="sn">03</span><h4>No automatic resume after power loss.</h4><p>A person decides what happens next.</p></div>
+    <div><span class="sn">04</span><h4>Independent hardware safety stop.</h4><p>Works even if the software does not.</p></div>
+  </div>
+</div></section>
+
+<section class="cta-band"><div class="wrap rv">
+  <a href="recipes.html" class="btn btn-g">See the flagship recipe <span class="ar" aria-hidden="true">→</span></a>
+</div></section>
+
+<footer class="site-footer"><div class="wrap foot">
+  <a href="index.html" aria-label="Procomm Dynamics home">
+    <img class="logo-img" src="assets/logo.svg" width="220" height="33" alt="Procomm Dynamics">
+  </a>
+  <div class="foot-links">
+    <a href="flexiconnect.html">FlexiConnect</a>
+    <a href="how-it-works.html">How it works</a>
+    <a href="recipes.html">Recipes</a>
+    <a href="integrations.html">Integrations</a>
+    <a href="reactor-makers.html">Reactor makers</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <span class="mono">© 2026 Procomm Dynamics · physical AI for the chemistry lab</span>
+</div></footer>
+<script src="js/main.js" defer></script>
+</body>
+</html>

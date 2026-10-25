@@ -1,84 +1,93 @@
 /**
- * Static responsive-regression checks for Procomm web pages.
- * The old scroll-scrubbed interaction was removed after iPhone/desktop QA:
- * process steps are now always visible; no 280vh sticky scroll runway.
+ * Homepage, responsive and conversion regression tests.
  * Run: npm run test:qa
  */
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import fs from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const read = (name) => readFileSync(path.join(root, name), "utf8");
 const home = read("index.html");
 const css = read("css/styles.css");
 const js = read("js/main.js");
+const thanksJs = read("js/thanks.js");
+const demo = read("contact.html");
+const oem = read("reactor-makers.html");
+const hardware = read("flexiconnect.html");
+const apps = read("applications.html");
+const about = read("about.html");
 
-test("overnight comparison shows all steps without scroll trap", () => {
-  const begin = home.indexOf('<section class="tl-scrub"');
-  const end = home.indexOf("</section>", begin);
-  assert.ok(begin > 0 && end > begin);
-  const section = home.slice(begin, end);
-  assert.equal((section.match(/class="tlx__row(?: tlx__row--without)?"/g) || []).length, 2);
-  assert.equal((section.match(/class="tlx__node(?: tlx__node--muted)?"/g) || []).length >= 8, true);
-  assert.match(section, /PROCESS COMPARISON/);
-  assert.doesNotMatch(section, /SCROLL TO PLAY/);
-  assert.ok(css.includes(".tl-scrub__scroll { height: auto !important;"));
-  assert.ok(css.includes("position: static !important;"));
-  assert.doesNotMatch(js, /Scroll-scrubbed With us/);
-  assert.ok(css.includes("grid-template-columns: repeat(2,minmax(0,1fr))"));
+test("new homepage introduces tagline then the two products", () => {
+  assert.match(home, /<h1>Experience<br><em>truly automated\.<\/em><\/h1>/);
+  assert.equal((home.match(/<h1\b/g) || []).length, 1);
+  const hero = home.indexOf('id="experience"');
+  const products = home.indexOf('id="products"');
+  const approach = home.indexOf('class="approach-section"');
+  assert.ok(hero >= 0 && products > hero && approach > products);
+  assert.match(home, /Our products\./);
+  assert.match(home, /href="flexiflow\.html" class="product-card__link"/);
+  assert.match(home, /href="flexiconnect\.html" class="product-card__link"/);
+  assert.match(home, /assets\/img\/flexiconnect-ss304-studio\.jpg/);
 });
 
-test("mobile reduces whitespace and never hides content behind reveal", () => {
-  assert.ok(css.includes(":root { --pad-y: 42px; }"));
-  assert.match(css, /\.loop-grid > div:first-child \{ position: static; \}/);
-  assert.match(css, /\.rv \{ opacity: 1 !important; transform: none !important; transition: none !important; \}/);
+test("sections are visually deliberate and mobile layouts are present", () => {
+  for (const name of [".brand-hero", ".product-grid", ".workflow-screen", ".approach-steps", ".application-spotlight", ".brand-outro"]) {
+    assert.ok(css.includes(name), name);
+  }
+  assert.match(css, /@media\(max-width:600px\)/);
+  assert.match(css, /\.product-grid \{grid-template-columns:1fr;/);
+  assert.match(css, /\.brand-hero__inner \{display:flex;flex-direction:column;/);
+  assert.match(css, /\.approach-steps \{grid-template-columns:1fr;/);
+  assert.doesNotMatch(home, /id="overnightSec"|class="scene-svg"/);
+  assert.doesNotMatch(js, /setInterval|scene\.style\.transform/);
 });
 
-test("recipe has a clear applications call-to-action", () => {
-  assert.match(home, /class="recipe-action"/);
-  assert.match(home, /href="applications\.html" class="btn btn-g">Explore applications/);
-});
-
-test("hero illustration is stable without animation repaint or flashing", () => {
-  const begin = home.indexOf('<svg viewBox="0 0 680 600" class="scene-svg"');
-  const end = home.indexOf("</svg>", begin);
-  assert.ok(begin > 0 && end > begin);
-  assert.doesNotMatch(home.slice(begin,end), /<animate\b/);
-  assert.doesNotMatch(js, /scene\.style\.transform|toast\.classList\.add\("flash"\)|setInterval/);
-  assert.match(home, /class="chip chip--dose"/);
-  assert.match(css, /\.chip--dose \{/);
-});
-
-test("hardware design facts and focused application copy", () => {
-  const hardware = read("flexiconnect.html");
-  const apps = read("applications.html");
-  assert.doesNotMatch(hardware + home, /DB15/i);
+test("product labels are factual and applications stay focused", () => {
+  assert.match(home, /DEVELOPMENT PREVIEW/);
+  assert.match(home, /DESIGN PREVIEW/);
+  assert.doesNotMatch(home + hardware, /DB15|2× RJ45/);
   assert.match(hardware, /DB9/);
-  assert.match(hardware, /1× RJ45 \(design target\)/);
   assert.match(hardware, /White \/ graphite — design concept/);
   assert.doesNotMatch(apps, /Polymerisation|Fermentation|Fertilisers|Extraction &amp; distillation/);
   assert.match(apps, /Chemical synthesis/);
   assert.match(apps, /Crystallisation/);
+  assert.doesNotMatch(about, /We started as an automation|Then we hit a real requirement/);
 });
 
-test("no unverified personal founder story", () => {
-  const about = read("about.html");
-  assert.doesNotMatch(about, /Then we hit a real requirement|We started as an automation|OUR STORY/);
-  assert.match(about, /ABOUT PROCOMM DYNAMICS/);
+test("both forms use native HTML POST to the email relay and remain visible", () => {
+  for (const [html,kind] of [[demo,"demo"],[oem,"oem"]]) {
+    assert.match(html, /method="POST" data-draft="/);
+    assert.match(html, /action="https:\/\/formsubmit\.co\/info@procommdynamics\.com"/);
+    assert.ok(html.includes('name="_next" value="https://procommdynamics.com/thanks.html?form=' + kind + '"'));
+    assert.match(html, /name="_honey"/);
+    assert.match(html, /class="clear-draft"/);
+    assert.match(html, /class="form-draft-status"/);
+    assert.doesNotMatch(html, /<form[^>]+hidden/);
+    assert.doesNotMatch(html, /form-unavailable/);
+  }
+  assert.doesNotMatch(js, /window\.location\.href|mailto:/);
 });
 
-test("unconfigured forms never auto-open mailto or fake success", () => {
-  const contact = read("contact.html");
-  const oem = read("reactor-makers.html");
-  assert.match(js, /var FORM_ENDPOINT = "";/);
-  assert.doesNotMatch(js, /window\.location\.href\s*=\s*["']mailto:/);
-  assert.match(contact, /id="demo-form-unavailable"/);
-  assert.match(oem, /id="partner-form-unavailable"/);
-  assert.match(contact, /<form id="demo-form" hidden/);
-  assert.match(oem, /<form id="partner-form" hidden/);
-  assert.match(js, /form\.hidden = false/);
-  assert.match(js, /if \(!FORM_ENDPOINT\)/);
+test("browser stores drafts temporarily, restores fields and retains unsent values", () => {
+  assert.match(js, /var TTL = 7 \* 24 \* 60 \* 60 \* 1000;/);
+  assert.match(js, /localStorage\.setItem\(draftKey\(kind\)/);
+  assert.match(js, /localStorage\.getItem\(draftKey\(kind\)/);
+  assert.match(js, /el\.value = draft\.values\[el\.name\]/);
+  assert.match(js, /form\.addEventListener\("input", queueSave\)/);
+  assert.match(js, /window\.addEventListener\("pagehide"/);
+  assert.match(js, /sessionStorage\.setItem\(pendingKey\(kind\)/);
+  assert.doesNotMatch(js, /localStorage\.removeItem\(draftKey\(kind\)\);\s*\/\* Native form POST/);
+  assert.match(thanksJs, /if \(confirmed\)/);
+  assert.match(thanksJs, /localStorage\.removeItem/);
+  assert.match(thanksJs, /Submission not verified\./);
+});
+
+test("thank-you page is noindex and does not claim inbox delivery", () => {
+  const thanks = read("thanks.html");
+  assert.match(thanks, /noindex, nofollow/);
+  assert.match(thanks, /Checking the submission\./);
+  assert.match(thanks, /not a guarantee of inbox delivery/);
 });

@@ -1,29 +1,38 @@
 # Procomm Dynamics website
 
-Static marketing site for **Procomm Dynamics** — Machines with Context.
+Static site for **Procomm Dynamics** — *Machines with Context.*
 
-Product: **FlexiFlow**. Controller: **FlexiConnect**.
+- Recipe software: **FlexiFlow**
+- Hardware controller: **FlexiConnect**
+- Planned primary domain: **https://procommdynamics.com/**
+- Previous GitHub Pages project address: https://abinavmoto.github.io/Procomm-website/
 
-## Local preview
+## Run locally
 
 ```bash
 python3 -m http.server 8080
 ```
 
-## GitHub Pages
+## Custom domain / SEO
 
-Deploy from branch `main`, folder `/ (root)`.
+This branch prepares custom-domain SEO tags, sitemap, social metadata, and a GitHub Pages `CNAME`. The DNS records and GitHub Pages custom domain setting must be configured by the domain owner; committing files does not change DNS or activate HTTPS.
 
-https://abinavmoto.github.io/Procomm-website/
+Publication source: `main`, folder `/(root)`.
 
-## SEO and launch readiness
+**Do not merge the custom-domain `CNAME` change before coordinating GitHub Pages settings and registrar DNS.** A premature merge can affect routing to the previous GitHub Pages address.
 
-See [SEO_LAUNCH_CHECKLIST.md](SEO_LAUNCH_CHECKLIST.md) before enabling indexing.
+Site-wide `robots.txt` currently allows crawling, but every HTML page still contains **`noindex, nofollow`** to prevent premature appearance in search. Turn off `noindex` only after the production domain, accurate product information and real enquiry backend are launch-approved.
 
-Note: this project lives under a GitHub Pages **subdirectory**. The repository `robots.txt` is not served from the host root and therefore cannot control crawling at this preview URL; the per-page `noindex` meta directives are the effective exclusion.
+Read **[SEO_LAUNCH_CHECKLIST.md](SEO_LAUNCH_CHECKLIST.md)** for DNS records, HTTPS, staging versus launch, Search Console and compliance checks.
+
+```bash
+npm run test:seo
+```
+
+The SEO tests check the custom-domain URLs, preview guards, CNAME, structured metadata and sitemap. The remaining browser QA tests may require Chromium/Puppeteer setup.
 
 ## Notes
 
-- Design preview: `noindex`, `robots.txt` Disallow, fixed preview bar.
-- No analytics. Google Fonts only as third-party.
-- Drop final FlexiConnect product images into `assets/img/` when ready.
+- Design previews are not a substitute for verified real-world product photos.
+- Demo and OEM contact forms require a verified server/CRM destination before commercial launch.
+- No analytics configured yet. Google Fonts is a third-party resource.

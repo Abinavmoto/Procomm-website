@@ -3,6 +3,7 @@ name: Website Visual QA
 on:
   push:
     branches:
+      - main
       - qa-visual-competitor-2026-10-26
   pull_request:
     branches:
@@ -33,7 +34,7 @@ jobs:
           sleep 2
       - name: Visual and interactive QA
         env:
-          QA_BASE64: '1'
+          QA_BASE64: ${{ github.ref == 'refs/heads/qa-visual-competitor-2026-10-26' && '1' || '0' }}
         run: node scripts/visual-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()

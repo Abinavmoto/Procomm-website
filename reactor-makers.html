@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>For reactor makers — Procomm Dynamics</title>
-<meta name="description" content="OEM partnership is an intended direction for lab reactor manufacturers. Send an enquiry about FlexiConnect.">
+<meta name="description" content="OEM partnership enquiry for lab reactor manufacturers interested in FlexiConnect and FlexiFlow.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
 <header class="page-hero"><div class="wrap">
   <span class="eyebrow">For reactor makers</span>
   <h1>Interested in building FlexiConnect into your <em>reactors?</em></h1>
-  <p class="lead">OEM partnerships are an intended direction, particularly for lab reactor manufacturers. This is an enquiry path, not a published program.</p>
+  <p class="lead">OEM partnerships are an intended direction, particularly for lab reactor manufacturers. This is a partnership enquiry — separate from a lab demo request.</p>
 </div></header>
 
 <section style="padding-top:20px"><div class="wrap">
@@ -45,7 +45,6 @@
       <span class="eyebrow">Intended integration model</span>
       <h2>Hardware, software and compatibility.</h2>
       <p class="lead">Designed for automating existing lab-scale jacketed glass reactors — and for manufacturers who want that capability beside their vessels.</p>
-      <a href="contact.html" class="btn btn-g">Send an enquiry <span class="ar" aria-hidden="true">→</span></a>
     </div>
     <ul>
       <li><b>01</b>FlexiConnect hardware interface and local controller</li>
@@ -53,6 +52,71 @@
       <li><b>03</b>Integration with compatible instruments (under assessment)</li>
       <li><b>04</b>Potential manufacturer integration and branding arrangements</li>
     </ul>
+  </div>
+</div></section>
+
+<section class="grey" id="partner"><div class="wrap">
+  <div class="form-card partner-form-card rv">
+    <div>
+      <span class="eyebrow">OEM partnership</span>
+      <h2>Partner enquiry.</h2>
+      <p class="lead">Tell us about your product line and how you might integrate FlexiConnect. Lab demo requests go to <a href="contact.html">Contact</a>.</p>
+    </div>
+    <div>
+      <div id="partner-success" tabindex="-1" hidden>
+        <h3 style="font-size:24px;margin-bottom:8px">Thank you.</h3>
+        <p>If your email client opened, send the message to finish. Otherwise email us at <a href="mailto:info@procommdynamics.com">info@procommdynamics.com</a> with subject “OEM partnership enquiry”.</p>
+      </div>
+      <form id="partner-form" action="#" method="post">
+        <div>
+          <label for="p-name">Name</label>
+          <input id="p-name" name="name" autocomplete="name" required>
+        </div>
+        <div>
+          <label for="p-role">Role / title</label>
+          <input id="p-role" name="role" autocomplete="organization-title">
+        </div>
+        <div class="full">
+          <label for="p-company">Company</label>
+          <input id="p-company" name="company" autocomplete="organization" required>
+        </div>
+        <div>
+          <label for="p-email">Work email</label>
+          <input id="p-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div>
+          <label for="p-website">Company website</label>
+          <input id="p-website" name="website" type="url" autocomplete="url" placeholder="https://">
+        </div>
+        <div class="full">
+          <label for="p-product">Reactor / product line</label>
+          <input id="p-product" name="product_line" placeholder="e.g. jacketed glass lab reactors">
+        </div>
+        <div>
+          <label for="p-volume">Approx. annual volume interest</label>
+          <select id="p-volume" name="volume_interest">
+            <option value="">Select…</option>
+            <option value="exploring">Exploring only</option>
+            <option value="under-50">Under 50 units / year</option>
+            <option value="50-200">50–200 units / year</option>
+            <option value="200-plus">200+ units / year</option>
+            <option value="undisclosed">Prefer not to say</option>
+          </select>
+        </div>
+        <div>
+          <label for="p-region">Primary market region</label>
+          <input id="p-region" name="region" placeholder="e.g. India, EU, US">
+        </div>
+        <div class="full">
+          <label for="p-message">How would you like to integrate?</label>
+          <textarea id="p-message" name="message" rows="4" placeholder="Hardware bundle, co-branding, software licensing, timeline…"></textarea>
+        </div>
+        <div class="full form-actions">
+          <button class="btn btn-g" type="submit">Send partner enquiry <span class="ar" aria-hidden="true">→</span></button>
+          <span class="form-note">Partnership form — separate from demo requests. Uses mailto until FORM_ENDPOINT is set.</span>
+        </div>
+      </form>
+    </div>
   </div>
 </div></section>
 

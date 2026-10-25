@@ -185,10 +185,13 @@
     setInterval(decide, 6000);
   }
 
-  /* Scroll-scrubbed With us / Without us timeline */
+  /* Scroll-scrubbed With us / Without us timeline (static on small screens) */
   (function () {
     var sec = document.getElementById("overnightSec");
     if (!sec) return;
+
+    var mobileMq =
+      window.matchMedia && window.matchMedia("(max-width: 640px)");
 
     var rows = Array.prototype.map.call(sec.querySelectorAll(".tlx__row"), function (row) {
       return {
@@ -209,6 +212,25 @@
     var travel = 1;
     var sticky = sec.querySelector(".tl-scrub__sticky");
     var stickyTop = 78;
+
+    function isStaticCompare() {
+      return prefersReduced || (mobileMq && mobileMq.matches);
+    }
+
+    function showComplete() {
+      rows.forEach(function (r) {
+        if (r.head) {
+          r.head.style.transform =
+            "translate3d(" + r.tw + "px,0,0) translate(-50%,-50%)";
+        }
+        if (r.full) r.full.style.transform = "scaleX(1)";
+        if (r.dash) r.dash.style.transform = "scaleX(1)";
+        if (r.solid) r.solid.style.transform = "scaleX(1)";
+        r.nodes.forEach(function (n) {
+          n.classList.add("on");
+        });
+      });
+    }
 
     function measure() {
       if (sticky) {
@@ -236,19 +258,8 @@
     }
 
     function frame() {
-      if (prefersReduced) {
-        rows.forEach(function (r) {
-          if (r.head) {
-            r.head.style.transform =
-              "translate3d(" + r.tw + "px,0,0) translate(-50%,-50%)";
-          }
-          if (r.full) r.full.style.transform = "scaleX(1)";
-          if (r.dash) r.dash.style.transform = "scaleX(1)";
-          if (r.solid) r.solid.style.transform = "scaleX(1)";
-          r.nodes.forEach(function (n) {
-            n.classList.add("on");
-          });
-        });
+      if (isStaticCompare()) {
+        showComplete();
         return;
       }
 
@@ -287,6 +298,7 @@
     window.addEventListener(
       "scroll",
       function () {
+        if (isStaticCompare()) return;
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(function () {
@@ -297,6 +309,10 @@
       { passive: true }
     );
     window.addEventListener("resize", measure);
+    if (mobileMq) {
+      if (mobileMq.addEventListener) mobileMq.addEventListener("change", measure);
+      else if (mobileMq.addListener) mobileMq.addListener(measure);
+    }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     measure();
   })();
@@ -435,6 +451,133 @@
           ].join("\n")
         );
       showSuccess();
+    });
+  }
+
+  /* OEM partner form (reactor-makers) — distinct from demo form */
+  var partnerForm = document.getElementById("partner-form");
+  if (partnerForm) {
+    partnerForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var note = partnerForm.querySelector(".form-note");
+      var success = document.getElementById("partner-success");
+      var name = (partnerForm.querySelector("#p-name") || {}).value || "";
+      var role = (partnerForm.querySelector("#p-role") || {}).value || "";
+      var company = (partnerForm.querySelector("#p-company") || {}).value || "";
+      var email = (partnerForm.querySelector("#p-email") || {}).value || "";
+      var website = (partnerForm.querySelector("#p-website") || {}).value || "";
+      var product = (partnerForm.querySelector("#p-product") || {}).value || "";
+      var volume = (partnerForm.querySelector("#p-volume") || {}).value || "";
+      var region = (partnerForm.querySelector("#p-region") || {}).value || "";
+      var message = (partnerForm.querySelector("#p-message") || {}).value || "";
+
+      partnerForm.querySelectorAll(".field-error").forEach(function (el) {
+        el.remove();
+      });
+      partnerForm.querySelectorAll("[aria-invalid]").forEach(function (el) {
+        el.removeAttribute("aria-invalid");
+      });
+
+      var ok = true;
+      function fail(id, msg) {
+        var field = partnerForm.querySelector("#" + id);
+        if (!field) return;
+        field.setAttribute("aria-invalid", "true");
+        var err = document.createElement("p");
+        err.className = "field-error";
+        err.textContent = msg;
+        field.parentNode.appendChild(err);
+        ok = false;
+      }
+
+      if (!name.trim()) fail("p-name", "Please enter your name.");
+      if (!company.trim()) fail("p-company", "Please enter your company.");
+      if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        fail("p-email", "Please enter a valid work email.");
+      }
+      if (!ok) {
+        if (note) note.textContent = "Please fix the highlighted fields.";
+        return;
+      }
+
+      var payload = {
+        form_type: "oem_partner",
+        name: name.trim(),
+        role: role.trim(),
+        company: company.trim(),
+        email: email.trim(),
+        website: website.trim(),
+        product_line: product.trim(),
+        volume_interest: volume.trim(),
+        region: region.trim(),
+        message: message.trim(),
+      };
+
+      function showPartnerSuccess() {
+        partnerForm.hidden = true;
+        if (success) {
+          success.hidden = false;
+          success.focus();
+        }
+      }
+
+      var bodyLines = [
+        "Form: OEM partnership enquiry",
+        "Name: " + payload.name,
+        "Role: " + payload.role,
+        "Company: " + payload.company,
+        "Email: " + payload.email,
+        "Website: " + payload.website,
+        "Product line: " + payload.product_line,
+        "Volume interest: " + payload.volume_interest,
+        "Region: " + payload.region,
+        "",
+        payload.message,
+      ];
+
+      if (FORM_ENDPOINT) {
+        var body = Object.keys(payload)
+          .map(function (k) {
+            return encodeURIComponent(k) + "=" + encodeURIComponent(payload[k]);
+          })
+          .join("&");
+        fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body,
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error("submit failed");
+            showPartnerSuccess();
+          })
+          .catch(function () {
+            if (note) {
+              note.textContent =
+                "Could not reach the form endpoint. Opening email instead…";
+            }
+            window.location.href =
+              "mailto:" +
+              MAILTO +
+              "?subject=" +
+              encodeURIComponent(
+                "OEM partnership enquiry — " + (payload.company || payload.name)
+              ) +
+              "&body=" +
+              encodeURIComponent(bodyLines.join("\n"));
+          });
+        return;
+      }
+
+      window.location.href =
+        "mailto:" +
+        MAILTO +
+        "?subject=" +
+        encodeURIComponent(
+          "OEM partnership enquiry — " + (payload.company || payload.name)
+        ) +
+        "&body=" +
+        encodeURIComponent(bodyLines.join("\n"));
+      showPartnerSuccess();
     });
   }
 })();

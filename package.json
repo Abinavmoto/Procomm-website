@@ -1,0 +1,10 @@
+{
+  "name": "procomm-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/tl-scrub-math.test.mjs tests/tl-scrub.qa.mjs",
+    "test:unit": "node --test tests/tl-scrub-math.test.mjs",
+    "test:qa": "node --test tests/tl-scrub.qa.mjs"
+  }
+}

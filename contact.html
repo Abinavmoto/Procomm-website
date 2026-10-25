@@ -59,12 +59,13 @@
       <p class="lead">Tell us about your reactor and instruments. Once an online enquiry is successfully received, we review the details and follow up by email. Reactor manufacturers: use the <a href="reactor-makers.html#partner">OEM enquiry</a>.</p>
     </div>
     <div>
-      <div id="form-success" tabindex="-1" hidden>
-        <h3 style="font-size:24px;margin-bottom:8px">Thank you.</h3>
-        <p>Your request was accepted by the configured form service. For questions, email <a href="mailto:info@procommdynamics.com">info@procommdynamics.com</a>.</p>
-      </div>
-      <p class="form-unavailable" id="demo-form-unavailable">Online demo enquiries are being configured. For now, contact <a href="mailto:info@procommdynamics.com">info@procommdynamics.com</a> directly. This form cannot send an enquiry yet.</p>
-      <form id="demo-form" hidden action="#" method="post">
+      <form id="demo-form" action="https://formsubmit.co/info@procommdynamics.com" method="POST" data-draft="demo">
+        <input type="hidden" name="_subject" value="[Procomm] New FlexiFlow demo enquiry">
+        <input type="hidden" name="_next" value="https://procommdynamics.com/thanks.html?form=demo">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_url" value="https://procommdynamics.com/contact.html">
+        <input type="hidden" name="form_type" value="Lab demo">
+        <div class="hp-field" aria-hidden="true"><label for="demo-trap">Leave this field empty</label><input id="demo-trap" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
         <div>
           <label for="name">Name</label>
           <input id="name" name="name" autocomplete="name" required>
@@ -93,6 +94,11 @@
           <label for="message">Message</label>
           <textarea id="message" name="message"></textarea>
         </div>
+        <div class="full draft-status-row">
+          <p class="form-draft-status" role="status" aria-live="polite">Your unfinished enquiry is saved on this device as you type.</p>
+          <button class="clear-draft" type="button">Clear saved draft</button>
+        </div>
+        <div class="full form-privacy">Draft details remain in this browser for up to seven days, unless you clear them. Sending uses FormSubmit's email service; no Procomm lead database is created. Please avoid entering sensitive research or confidential process data. <a href="https://formsubmit.co/privacy" target="_blank" rel="noopener noreferrer">Form service privacy</a>.</div>
         <div class="full form-actions">
           <button class="btn btn-g" type="submit">Request a demo <span class="ar" aria-hidden="true">→</span></button>
           <span class="form-note" aria-live="polite"></span>

@@ -1,68 +1,70 @@
-# Procomm Dynamics — Prelaunch SEO and conversion checklist
+# Procomm Dynamics — Custom domain SEO + launch checklist
 
-**State, 25 October 2026:** Public design preview; **not approved for search indexing**.
+**Target production origin:** https://procommdynamics.com/ (apex; not www)  
+**Status:** staged in GitHub PR #9. **Not live, not approved for search indexing.**  
+**Last prepared:** 25 October 2026
 
-## Verified implementation in this branch
-- Unique SEO titles and descriptions for 9 preferred site pages.
-- Canonical links, Open Graph sharing metadata and X/Twitter Card metadata.
-- Minimal, fact-safe Organization and WebSite JSON-LD on the homepage.
-- A sitemap of the 9 preferred URLs, excluding legacy meta-refresh alias pages.
-- No invented product certifications, founder details, address, performance figures or customer testimonials.
-- Contact and OEM forms no longer show a completed-success state when they merely create a mailto draft.
+## Implemented on this branch
+- `CNAME` contains only `procommdynamics.com` for GitHub Pages branch publishing.
+- Nine primary site pages use `https://procommdynamics.com/` in self-referencing canonical links, Open Graph and X/Twitter image/share URLs.
+- Homepage Organization + WebSite JSON-LD refers to the apex custom domain; no invented address, founding date or certification.
+- `sitemap.xml` uses the apex domain for all 9 preferred content URLs. Legacy aliases are not submitted.
+- Three legacy meta-refresh pages have absolute custom-domain canonical targets.
+- `robots.txt` allows crawling and advertises the apex sitemap, **but each public HTML page still has `noindex, nofollow`** pending launch approval.
+- SEO metadata was prepared in PR #9; contact and OEM forms still need a verified real backend, and original photo/prototype claims must be confirmed.
+- A repository SEO regression test checks canonical, social URLs, sitemap, crawler directives and the preview `noindex` state.
 
-## Important GitHub Pages robots detail
-This project is hosted at `https://abinavmoto.github.io/Procomm-website/` — a **subdirectory** of the `abinavmoto.github.io` host.
-A file published at `https://abinavmoto.github.io/Procomm-website/robots.txt` is **NOT host-root robots.txt** and therefore cannot govern crawling of these project pages. Effective robots.txt would have to be at `https://abinavmoto.github.io/robots.txt`, or at the root of your future custom domain.
-The working search exclusion on the individual HTML pages is `<meta name="robots" content="noindex, nofollow">`.
-When using `noindex`, do not block the pages from crawling via host-root robots.txt: crawlers need to fetch the page to read noindex. For a truly private preview, require authentication/access control. See Google's documentation on robots location and noindex.
+## Domain / GitHub Pages setup (actions for domain owner)
+1. Verify ownership of `procommdynamics.com` in GitHub, if available: GitHub account Settings → Pages → Verified domains. Verification reduces takeover risk.
+2. Open repository **Settings → Pages** and set custom domain to **`procommdynamics.com`**. Confirm publication source is `main` + `/(root)`. GitHub may generate its own matching root `CNAME` file; keep just one consistent CNAME.
+3. Set DNS at your domain registrar/provider (remove any conflicting or stale records):
+   - `A @ 185.199.108.153`
+   - `A @ 185.199.109.153`
+   - `A @ 185.199.110.153`
+   - `A @ 185.199.111.153`
+   - `CNAME www abinavmoto.github.io`
+   - Optional: follow GitHub's **current** documented AAAA or ALIAS/ANAME records if using them instead. Do **not** use wildcard DNS.
+4. Wait for DNS/HTTPS verification; enable **Enforce HTTPS** in Settings → Pages. Make sure `https://www.procommdynamics.com` redirects to `https://procommdynamics.com`, not the other way.
+5. Confirm every page and shared asset loads correctly at **domain root**. On GitHub Pages, a project site with a custom domain is served at `/` rather than `/Procomm-website/`; the site's relative resource URLs should work, but test them.
+6. Validate `https://procommdynamics.com/robots.txt` and `https://procommdynamics.com/sitemap.xml` after DNS and GitHub Pages domain configuration is working.
 
-## Prerequisites: business and product
-- [ ] Verify the final domain, working info@procommdynamics.com mailbox, and actual operational address/contact information.
-- [ ] Confirm the registered legal name and public company description.
-- [ ] Replace concept images with actual product photos or accurate labelled CAD visuals; publish a bench/demo video only after real footage exists.
-- [ ] Verify capacity limits, final I/O and communications, control tolerances, fail-safe behavior, service claims, instrument integration, and availability of SS304/white-graphite finishes.
-- [ ] Keep 21 CFR Part 11 electronic records/e-signatures and safety claims at their actual validated stage. Do not claim certification or unattended-autonomy without appropriate evidence.
-- [ ] Obtain consent before publishing founders, photos, customer logos or customer stories.
+**Important merging caveat:** Adding `CNAME` on `main` may switch the site's public custom-domain routing before DNS is configured. Coordinate PR merge with the GitHub Pages and DNS changes. Don't assume writing CNAME updates registrar DNS records or issues the HTTPS certificate.
 
-## Prerequisites: forms, accessibility, speed
-- [ ] Connect and verify **both** demo and OEM forms to an actual lead-receiving service. A Zoho Forms share/permalink page is NOT automatically a CORS-compatible form POST API; use a supported embed or secure integration and check response/storage end-to-end.
-- [ ] Confirm email notifications and CRM ownership routing; test a submission from desktop and iPhone. Prevent a fake success when backend rejects request.
-- [ ] Add a privacy notice and consent/anti-spam provisions suitable for the chosen lead-processing provider.
-- [ ] Test all navigation links and legacy redirects; inspect focus states, keyboard order, mobile menu, FAQ accordion and reduced-motion behavior.
-- [ ] Use the existing WebP product assets, appropriate width/height and lazy loading below the fold.
-- [ ] Run Lighthouse/PageSpeed Insights and accessibility checks on a deployed site at 320px, 375px, 768px and desktop widths. No Lighthouse/Core Web Vitals score has yet been measured.
+## Search-engine gating
+**Current staged mode:** Robots can crawl URLs and see the `noindex` meta directive. This correctly blocks indexing for participating search engines even though `robots.txt` allows crawling.
 
-## Go-live actions after checks
-1. Move to a proper business custom domain with HTTPS. Replace EVERY `https://abinavmoto.github.io/Procomm-website/` in canonicals, OG tags, JSON-LD and sitemap with its canonical origin and path.
-2. Remove `noindex, nofollow` tags from real public pages (or replace with `index, follow`) once those pages are launch-approved.
-3. On the **new custom domain's host root**, publish a correct robots.txt, e.g.:
-   ```text
-   User-agent: *
-   Allow: /
-   Sitemap: https://YOUR-DOMAIN/sitemap.xml
-   ```
-4. Remove "preview" UI if ready, and publish the approved privacy and company/legal details.
-5. Test status codes, canonical tags, sitemap.xml and robots.txt at the real public domain. Prefer actual 301 redirects to legacy alias pages if the host supports them. GitHub Pages does not provide arbitrary server-side 301 mapping.
-6. Set up Google Search Console and Bing Webmaster Tools, submit sitemap, inspect Home/FlexiFlow/FlexiConnect, and track nonbranded impressions, page indexing and real leads.
+**Commercial launch checklist:**
+- [ ] DNS correctly points to GitHub Pages; HTTPS works; apex is canonical and www redirects.
+- [ ] Real email inbox and demo/OEM form backend **accept and store** test enquiries; consent/privacy/anti-spam appropriately handled.
+- [ ] Hardware product photography, stated supported capacities, finish options and instrument compatibility reviewed for accuracy.
+- [ ] No unsupported Part 11, e-signature, unattended safety, customer success or certification claims.
+- [ ] All key pages, JS interactions and forms work on desktop/mobile; real browser Lighthouse and accessibility tests done.
+- [ ] Publish appropriate legal and privacy information.
+- [ ] **Remove** `<meta name="robots" content="noindex, nofollow">` on the nine main pages only **after** the above are completed; keep aliases noindex and canonical to preferred URLs.
+- [ ] Verify sitemap entries, canonical tags, HTTP statuses and crawler access again after launch.
+- [ ] Verify domain ownership in Google Search Console and Bing Webmaster Tools; submit sitemap, inspect home/FlexiFlow/FlexiConnect and monitor indexing.
+- [ ] Ensure GitHub Pages' old project URL redirects or has canonical/redirect handling; avoid splitting signals across two origins.
+
+**Never switch `robots.txt` back to `Disallow: /` while keeping `noindex`**: search engines must fetch a page to see its noindex directive. For a genuinely private draft, use an access-controlled staging site. Google Search Central: https://developers.google.com/search/docs/crawling-indexing/block-indexing
 
 ## Search intent map
-| URL | Primary search intent | Related search terms |
+| Page | Primary intent | Secondary relevant concepts |
 | --- | --- | --- |
-| / | lab reactor automation / retrofit | jacketed glass reactor automation |
-| flexiflow.html | lab reactor recipe automation software | ramp hold dose recipes, experiment records |
-| flexiconnect.html | laboratory reactor controller | sensor interface, chiller and dosing pump integration |
-| applications.html | crystallisation and synthesis automation | seeded crystallisation, temperature control |
-| compatibility.html | lab instrument integration | stirrers, chillers, RTD, RS232, RS485 |
-| reactor-makers.html | lab reactor OEM automation | manufacturer integration, OEM partnerships |
-| faq.html | jacketed lab reactor retrofit FAQs | deployment, compatibility, safety |
-| about.html | Procomm Dynamics lab automation company | Machines with Context, India |
-| contact.html | request lab reactor automation demo | automation enquiry |
+| / | lab reactor automation | jacketed glass reactor retrofit |
+| flexiflow.html | laboratory recipe automation software | ramp, hold, dosing, experiment record |
+| flexiconnect.html | lab reactor controller | physical interfaces, instrument connectivity |
+| applications.html | crystallisation automation | cooling ramps, seeded crystallisation |
+| compatibility.html | reactor instrument compatibility | RTD, stirrer, chiller, dosing pump |
+| reactor-makers.html | lab reactor OEM automation | manufacturer integration and co-development |
+| faq.html | lab reactor retrofit FAQ | safety, compatibility, records |
+| about.html | Procomm Dynamics | hardware-led scientific automation India |
+| contact.html | FlexiFlow demonstration request | automation enquiry |
 
-## Content to write after technical launch preparation
-1. **How to automate an existing jacketed glass reactor** — retrofit process, integration checklist and validation boundary.
-2. **Lab reactor recipes: temperature ramps, holds and dosing** — educational, illustrative sequences.
-3. **How to assess stirrer, chiller and pump compatibility** — interfaces, electrical isolation and verification.
-4. **Part 11-ready architecture vs actual Part 11 compliance** — carefully distinguished feature requirements, validation and electronic signatures.
-5. **A real FlexiConnect prototype/PoC test report**, after physical experiments with evidence.
+## Publish later when supported by evidence
+1. A retrofit guide for existing jacketed glass reactors.
+2. An illustrated recipe-builder guide for ramps, holds, dosing and audit records.
+3. An instrument compatibility assessment checklist.
+4. A careful explainer separating Part 11 design goals from validated compliance.
+5. Actual test-rig photos, a short real demonstration and a measured prototype case study.
 
-Track *qualified* scientist and reactor OEM enquiries as the main business outcome; keyword position alone is not conversion.
+**Primary KPIs:** relevant non-branded impressions, qualified demo leads, OEM enquiries, enquiry-to-meeting conversion. SEO is not a substitute for a functioning lead-capture system.

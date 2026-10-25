@@ -1,8 +1,9 @@
 /* Procomm Dynamics — site behaviour
  *
- * Contact form: set FORM_ENDPOINT to your Zoho Forms (or other) URL to POST
- * as application/x-www-form-urlencoded. Leave empty to fall back to mailto.
- * Zoho: Forms → Share → embed / permalink; map field names to the form ids below.
+ * Contact form: set FORM_ENDPOINT only to a verified, CORS-capable API endpoint
+ * accepting application/x-www-form-urlencoded and returning 2xx after storing the lead.
+ * A Zoho Forms share/permalink URL is NOT itself a supported POST endpoint.
+ * Leave blank for manual mailto draft fallback; a mail draft is never a completed lead.
  */
 (function () {
   "use strict";
@@ -406,7 +407,7 @@
           .catch(function () {
             if (note) {
               note.textContent =
-                "Could not reach the form endpoint. Opening email instead…";
+                "The form service is unavailable. Your email app will open; you must send the email yourself to complete the enquiry.";
             }
             window.location.href =
               "mailto:" +
@@ -448,7 +449,7 @@
             payload.message,
           ].join("\n")
         );
-      showSuccess();
+      if (note) note.textContent = "Your email app should open. Send the message to complete your enquiry; this page has not submitted it.";
     });
   }
 
@@ -551,7 +552,7 @@
           .catch(function () {
             if (note) {
               note.textContent =
-                "Could not reach the form endpoint. Opening email instead…";
+                "The form service is unavailable. Your email app will open; you must send the email yourself to complete the enquiry.";
             }
             window.location.href =
               "mailto:" +
@@ -575,7 +576,7 @@
         ) +
         "&body=" +
         encodeURIComponent(bodyLines.join("\n"));
-      showPartnerSuccess();
+      if (note) note.textContent = "Your email app should open. Send the message to complete your enquiry; this page has not submitted it.";
     });
   }
 })();

@@ -103,66 +103,7 @@
   /* Keep the hardware illustration stationary on scroll to avoid mobile flicker. */
   var scene = document.getElementById("scene");
 
-  /* Hero illustrative simulation — recipe-engine events only */
-  if (scene && !prefersReduced) {
-    var $ = function (id) {
-      return document.getElementById(id);
-    };
-    var toast = $("toast");
-    var t = 0;
-    var dose = 18.4;
-    var msgs = [
-      "Step 4 · Seed · hold 30 min",
-      "Dose 18.4 / 33.3 mL",
-      "Step 5 · Antisolvent dose in progress",
-      "Step 3 · Cool to 60 °C at 0.2 °C/min",
-    ];
-    var mi = 0;
-    var pad = function (n) {
-      return String(n).padStart(2, "0");
-    };
-    var stamp = function () {
-      var d = new Date();
-      return (
-        pad(d.getHours()) +
-        ":" +
-        pad(d.getMinutes()) +
-        ":" +
-        pad(d.getSeconds()) +
-        "." +
-        String(d.getMilliseconds()).padStart(3, "0")
-      );
-    };
-
-    setInterval(function () {
-      t += 1;
-      if ($("v-tr"))
-        $("v-tr").textContent = (
-          62.4 +
-          Math.sin(t / 3) * 0.18 +
-          (Math.random() - 0.5) * 0.06
-        ).toFixed(1);
-      if ($("v-tj"))
-        $("v-tj").textContent = (58.1 + Math.sin(t / 4 + 1) * 0.25).toFixed(1);
-      if ($("v-rpm"))
-        $("v-rpm").textContent = String(Math.round(300 + (Math.random() - 0.5) * 4));
-      dose += 0.12;
-      if (dose > 33.3) dose = 18.4;
-      if ($("v-dose")) $("v-dose").textContent = dose.toFixed(1);
-    }, 900);
-
-    function decide() {
-      mi = (mi + 1) % msgs.length;
-      if ($("t-msg")) $("t-msg").textContent = msgs[mi];
-      if ($("t-time")) $("t-time").textContent = stamp();
-      /* Update illustrative text without flashing the product render. */
-    }
-
-    if ($("t-time")) $("t-time").textContent = stamp();
-    mi = -1;
-    decide();
-    setInterval(decide, 6000);
-  }
+  /* The hero uses a static, clearly labelled illustration for reliable mobile rendering. */
 
   /* The overnight comparison is now fully visible and requires no scroll-scrub. */
 

@@ -894,7 +894,7 @@ section {
 
 .tl-scrub__scroll {
   position: relative;
-  height: 220vh;
+  height: 260vh; /* scroll runway for MicroAGI-style scrub */
 }
 
 .tl-scrub__sticky {
@@ -903,9 +903,9 @@ section {
   height: calc(100vh - 78px);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding-top: clamp(28px, 5vh, 56px);
-  padding-bottom: 28px;
+  justify-content: center;
+  padding-top: clamp(16px, 3vh, 36px);
+  padding-bottom: clamp(16px, 3vh, 36px);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -2053,14 +2053,14 @@ textarea {
   }
 
   .tl-scrub__scroll {
-    height: 200vh;
+    height: 240vh;
   }
 
   .tl-scrub__sticky {
     top: 78px;
     height: calc(100vh - 78px);
-    justify-content: flex-start;
-    padding-top: 28px;
+    justify-content: center;
+    padding-top: 20px;
   }
 
   .tlx__row {
@@ -2527,49 +2527,42 @@ html.reduced body {
   margin-top: 8px;
 }
 
-/* Phones + large phones: no scrub — With us stays fully shown, then Without, then scroll on */
+/* Mobile: keep MicroAGI scrub — sticky panel, With us holds, then scroll away */
 @media (max-width: 820px) {
   .tl-scrub__scroll {
-    height: auto !important;
+    height: 280vh;
   }
 
   .tl-scrub__sticky {
-    position: static !important;
-    height: auto !important;
-    overflow: visible !important;
-    padding: 40px 0 48px !important;
-    justify-content: flex-start;
-  }
-
-  .tl-scrub__play-hint {
-    display: none;
+    position: sticky;
+    top: 64px;
+    height: calc(100svh - 64px);
+    justify-content: center;
+    padding: 16px 0 20px;
+    overflow: hidden;
   }
 
   .tl-scrub__title {
-    margin-bottom: 24px;
+    font-size: clamp(26px, 7vw, 36px);
+    margin-bottom: 28px;
   }
 
   .tlx__row + .tlx__row {
-    margin-top: 32px;
-    padding-top: 28px;
-    border-top: 1px solid var(--line);
+    margin-top: 28px;
   }
 
-  .tlx__node {
-    opacity: 1 !important;
-    transform: none !important;
+  .tlx__label {
+    width: 72px;
+    font-size: 16px;
   }
 
-  .tlx__node .tlx__dot {
-    transform: translate(-50%, -50%) scale(1) !important;
+  .tlx__t {
+    font-size: 9px;
   }
 
-  .tlx__prog {
-    transform: scaleX(1) !important;
-  }
-
-  .tlx__head {
-    display: none !important;
+  .tlx__d {
+    font-size: 11px;
+    line-height: 1.2;
   }
 }
 
@@ -2619,26 +2612,13 @@ html.reduced body {
   }
 
   .tlx__row {
-    flex-direction: column;
+    flex-direction: row;
+    align-items: flex-start;
     gap: 10px;
   }
 
-  .tlx__label {
-    width: auto;
-    font-size: 22px;
-  }
-
   .tlx__node {
-    padding: 22px 6px 0 0;
-  }
-
-  .tlx__t {
-    font-size: 10px;
-  }
-
-  .tlx__d {
-    font-size: 13px;
-    line-height: 1.25;
+    padding: 22px 4px 0 0;
   }
 
   .makers {

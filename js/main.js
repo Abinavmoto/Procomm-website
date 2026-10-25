@@ -185,13 +185,10 @@
     setInterval(decide, 6000);
   }
 
-  /* Scroll-scrubbed With us / Without us timeline (static on small screens) */
+  /* Scroll-scrubbed With us / Without us timeline (MicroAGI-style) */
   (function () {
     var sec = document.getElementById("overnightSec");
     if (!sec) return;
-
-    var mobileMq =
-      window.matchMedia && window.matchMedia("(max-width: 820px)");
 
     var rows = Array.prototype.map.call(sec.querySelectorAll(".tlx__row"), function (row) {
       return {
@@ -212,10 +209,6 @@
     var travel = 1;
     var sticky = sec.querySelector(".tl-scrub__sticky");
     var stickyTop = 78;
-
-    function isStaticCompare() {
-      return prefersReduced || (mobileMq && mobileMq.matches);
-    }
 
     function showComplete() {
       rows.forEach(function (r) {
@@ -258,7 +251,8 @@
     }
 
     function frame() {
-      if (isStaticCompare()) {
+      /* Reduced motion: show finished comparison, no scrub */
+      if (prefersReduced) {
         showComplete();
         return;
       }
@@ -267,13 +261,13 @@
       var p = (stickyTop - top) / travel;
       p = p < 0 ? 0 : p > 1 ? 1 : p;
 
-      /* With us completes early and holds to the end; Without trails, then section scrolls away */
+      /* With us completes early and holds; Without trails; sticky stays until end */
       rows.forEach(function (r) {
         var q;
         if (r.slow) {
-          q = Math.pow(Math.min(1, Math.max(0, (p - 0.08) / 0.92)), 1.35);
+          q = Math.pow(Math.min(1, Math.max(0, (p - 0.06) / 0.94)), 1.4);
         } else {
-          q = Math.min(1, p / 0.42);
+          q = Math.min(1, p / 0.38);
         }
         var headX = q * r.tw;
         if (r.head) {
@@ -304,7 +298,7 @@
     window.addEventListener(
       "scroll",
       function () {
-        if (isStaticCompare()) return;
+        if (prefersReduced) return;
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(function () {
@@ -315,10 +309,6 @@
       { passive: true }
     );
     window.addEventListener("resize", measure);
-    if (mobileMq) {
-      if (mobileMq.addEventListener) mobileMq.addEventListener("change", measure);
-      else if (mobileMq.addListener) mobileMq.addListener(measure);
-    }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     measure();
   })();

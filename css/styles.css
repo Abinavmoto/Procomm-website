@@ -2177,56 +2177,9 @@ html.reduced body {
   will-change: transform;
 }
 
-.hero-device {
-  position: absolute;
-  right: 1%;
-  top: 8%;
-  width: min(46%, 300px);
-  z-index: 3;
-  pointer-events: none;
-}
-
-.hero-device picture,
-.hero-device img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 16px;
-}
-
-.hero-device .corner {
-  width: 16px;
-  height: 16px;
-  z-index: 4;
-}
-
-.scene.deciding .hero-device {
-  animation: devicePulse 1.2s ease;
-}
-
-@keyframes devicePulse {
-  0%,
-  100% {
-    filter: drop-shadow(0 18px 28px rgba(11, 15, 74, 0.16));
-  }
-  40% {
-    filter: drop-shadow(0 18px 36px rgba(31, 195, 122, 0.35));
-  }
-}
-
-@media (max-width: 1080px) {
-  .hero-device {
-    width: min(48%, 260px);
-    top: 10%;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-device {
-    width: 46%;
-    right: 0;
-    top: 6%;
-  }
+.scene .fc-illu .mono-s {
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
 }
 
 .brand-line {

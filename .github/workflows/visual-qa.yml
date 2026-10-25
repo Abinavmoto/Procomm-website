@@ -1,0 +1,41 @@
+name: Website Visual QA
+
+on:
+  push:
+    branches:
+      - qa-visual-competitor-2026-10-26
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run existing regression tests
+        run: npm test
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Start local static server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/procomm-qa-http.log 2>&1 &
+          sleep 2
+      - name: Visual and interactive QA
+        run: node scripts/visual-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: procomm-visual-qa
+          path: qa-output/
+          retention-days: 7

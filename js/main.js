@@ -262,13 +262,15 @@
       p = p < 0 ? 0 : p > 1 ? 1 : p;
 
       /* With us completes early and holds; Without trails; sticky stays until end */
+      var math = window.TlScrubMath;
       rows.forEach(function (r) {
-        var q;
-        if (r.slow) {
-          q = Math.pow(Math.min(1, Math.max(0, (p - 0.06) / 0.94)), 1.4);
-        } else {
-          q = Math.min(1, p / 0.38);
-        }
+        var q = math
+          ? r.slow
+            ? math.withoutProgress(p)
+            : math.withProgress(p)
+          : r.slow
+            ? Math.pow(Math.min(1, Math.max(0, (p - 0.06) / 0.94)), 1.4)
+            : Math.min(1, p / 0.38);
         var headX = q * r.tw;
         if (r.head) {
           r.head.style.transform =

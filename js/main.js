@@ -1,10 +1,4 @@
-/* Procomm Dynamics — site behaviour
- *
- * Contact form: set FORM_ENDPOINT only to a verified, CORS-capable API endpoint
- * accepting application/x-www-form-urlencoded and returning 2xx after storing the lead.
- * A Zoho Forms share/permalink URL is NOT itself a supported POST endpoint.
- * When blank, the form is hidden and a clearly labeled contact alternative is shown.
- */
+/* Procomm Dynamics — site behaviour and native enquiry draft recovery */
 (function () {
   "use strict";
 
@@ -120,54 +114,112 @@
   });
 
   /*
-   * Enquiry forms require a real, verified server/CRM endpoint.
-   * GitHub Pages does not process POST requests. Hide nonfunctional forms
-   * until an authorised endpoint is configured; never misreport a mailto draft
-   * as a submitted enquiry or unexpectedly open the user's mail client.
+   * Native HTML email forms + local-only draft recovery.
+   * Submissions use FormSubmit's normal POST flow, preserving CAPTCHA and
+   * the provider's real redirect. No client-side claim of email delivery.
+   * Only a same-tab return from the configured thank-you redirect can
+   * clear the local draft; failed/aborted sends keep the unsent answers.
    */
-  function setupEnquiryForm(formId, unavailableId, successId, type) {
-    var form = document.getElementById(formId);
-    if (!form) return;
-    var note = form.querySelector(".form-note");
-    var unavailable = document.getElementById(unavailableId);
-    var success = document.getElementById(successId);
-    if (!FORM_ENDPOINT) {
-      form.hidden = true;
-      if (unavailable) unavailable.hidden = false;
-      return;
-    }
-    if (unavailable) unavailable.hidden = true;
-    form.hidden = false;
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      if (!form.reportValidity()) return;
-      var submit = form.querySelector('[type="submit"]');
-      if (submit) submit.disabled = true;
-      if (note) note.textContent = "Sending enquiry…";
-      var params = new URLSearchParams(new FormData(form));
-      params.set("form_type", type);
-      fetch(FORM_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params.toString()
-      })
-        .then(function (res) {
-          if (!res.ok) throw new Error("Unable to accept enquiry");
-          form.hidden = true;
-          if (success) {
-            success.hidden = false;
-            success.focus();
-          }
-        })
-        .catch(function () {
-          if (note) note.textContent = "The online enquiry could not be sent. Your details are still in the form; please retry or contact us using the email link.";
-        })
-        .finally(function () {
-          if (submit) submit.disabled = false;
-        });
-    });
-  }
+  (function () {
+    var TTL = 7 * 24 * 60 * 60 * 1000;
+    function draftKey(kind) { return "procomm:enquiry:" + kind + ":v1"; }
+    function pendingKey(kind) { return "procomm:pending:" + kind + ":v1"; }
 
-  setupEnquiryForm("demo-form", "demo-form-unavailable", "form-success", "lab_demo");
-  setupEnquiryForm("partner-form", "partner-form-unavailable", "partner-success", "oem_partner");
+    function enableDrafts(formId, kind) {
+      var form = document.getElementById(formId);
+      if (!form) return;
+      var status = form.querySelector(".form-draft-status");
+      var clear = form.querySelector(".clear-draft");
+      var timer;
+      var controls = Array.prototype.filter.call(form.elements, function (el) {
+        return Boolean(el.name && el.name.charAt(0) !== "_" &&
+          el.name !== "form_type" && !el.disabled &&
+          (el.tagName === "INPUT" || el.tagName === "SELECT" || el.tagName === "TEXTAREA") &&
+          (el.type === "text" || el.type === "email" || el.type === "url" ||
+           el.tagName === "SELECT" || el.tagName === "TEXTAREA"));
+      });
+
+      function tell(message) { if (status) status.textContent = message; }
+      function collect() {
+        var values = {};
+        controls.forEach(function (el) {
+          values[el.name] = String(el.value || "").slice(0, 6000);
+        });
+        return values;
+      }
+
+      function store() {
+        clearTimeout(timer);
+        try {
+          var values = collect();
+          if (!Object.keys(values).some(function (k) { return values[k].trim(); })) {
+            localStorage.removeItem(draftKey(kind));
+            tell("No unfinished draft is stored.");
+            return;
+          }
+          localStorage.setItem(draftKey(kind), JSON.stringify({
+            savedAt: Date.now(), values: values
+          }));
+          tell("Draft saved on this device. It can be restored for up to 7 days.");
+        } catch (error) {
+          tell("This browser isn't allowing draft storage. Keep this page open until you send.");
+        }
+      }
+
+      try {
+        var raw = localStorage.getItem(draftKey(kind));
+        if (raw) {
+          var draft = JSON.parse(raw);
+          if (!draft || !draft.savedAt || Date.now() - draft.savedAt > TTL ||
+              draft.savedAt > Date.now() + 60000 || !draft.values) {
+            localStorage.removeItem(draftKey(kind));
+          } else {
+            controls.forEach(function (el) {
+              if (Object.prototype.hasOwnProperty.call(draft.values, el.name) &&
+                  typeof draft.values[el.name] === "string") {
+                el.value = draft.values[el.name];
+              }
+            });
+            tell("Your unfinished draft has been restored on this device.");
+          }
+        }
+      } catch (error) {
+        tell("Draft recovery isn't available in this browser.");
+      }
+
+      function queueSave() { clearTimeout(timer); timer = setTimeout(store, 250); }
+      form.addEventListener("input", queueSave);
+      form.addEventListener("change", store);
+      window.addEventListener("pagehide", function () {
+        clearTimeout(timer);
+        store();
+      });
+
+      if (clear) {
+        clear.addEventListener("click", function () {
+          clearTimeout(timer);
+          form.reset();
+          try { localStorage.removeItem(draftKey(kind)); } catch (error) {}
+          try { sessionStorage.removeItem(pendingKey(kind)); } catch (error) {}
+          tell("Draft cleared from this device.");
+        });
+      }
+
+      form.addEventListener("submit", function (event) {
+        if (!form.checkValidity()) return;
+        /* Empty honeypot is enforced by the provider, not submitted as a draft. */
+        store();
+        try {
+          sessionStorage.setItem(pendingKey(kind), JSON.stringify({
+            savedAt: Date.now(), form: kind
+          }));
+        } catch (error) {}
+        tell("Submitting securely. Your draft will be kept unless the service confirms acceptance.");
+        /* Native form POST proceeds to FormSubmit; no mailto and no fake success. */
+      });
+    }
+
+    enableDrafts("demo-form", "demo");
+    enableDrafts("partner-form", "oem");
+  })();
 })();

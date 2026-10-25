@@ -79,81 +79,17 @@
 <circle cx="318" cy="87" r="3" fill="#0b0f4a"/><rect x="336" y="80" width="18" height="6" rx="2" fill="#1fc37a" opacity=".8"/>
 <text x="329" y="54" text-anchor="middle" class="mono-s" fill="#8a90a0">DOSING PUMP</text>
 <path d="M296 100 C 270 110 262 140 262 178 L262 250" class="tube"/>
-<path d="M240 172 C 300 110 360 290 458 248" class="sb"/><path d="M240 172 C 300 110 360 290 458 248" class="sf"/>
-<path d="M250 92 C 350 92 400 240 458 268" class="sb"/><path d="M250 92 C 350 92 400 240 458 268" class="sf" style="animation-delay:-0.6s"/>
-<path d="M282 462 C 350 462 400 340 458 308" class="sb"/><path d="M282 462 C 350 462 400 340 458 308" class="sf" style="animation-delay:-0.3s"/>
-<!-- FlexiConnect — CAD 3/4 angle + geometry, line-art (not flat front) -->
-<g class="fc-illu" transform="translate(448 112)">
-  <!-- open-frame stand in 3/4 -->
-  <path d="M28 318 L158 318 L178 308 L48 308 Z" fill="none" stroke="#9aa1ab" stroke-width="1.5"/>
-  <path d="M40 318 L46 300" fill="none" stroke="#9aa1ab" stroke-width="1.4"/>
-  <path d="M150 318 L160 300" fill="none" stroke="#9aa1ab" stroke-width="1.4"/>
-  <path d="M52 308 L58 292" fill="none" stroke="#9aa1ab" stroke-width="1.35"/>
-  <path d="M162 308 L166 292" fill="none" stroke="#9aa1ab" stroke-width="1.35"/>
-  <!-- rear stubs (CAD: back-left) -->
-  <ellipse cx="10" cy="228" rx="7" ry="5.5" fill="#fff" stroke="#0b0f4a" stroke-width="1.45"/>
-  <ellipse cx="10" cy="250" rx="7" ry="5.5" fill="#fff" stroke="#0b0f4a" stroke-width="1.45"/>
-  <path d="M10 228 H28" stroke="#0b0f4a" stroke-width="3" stroke-linecap="round"/>
-  <path d="M10 250 H28" stroke="#0b0f4a" stroke-width="3" stroke-linecap="round"/>
-  <!-- left side face (logo wall) -->
-  <path d="M56 42
-           C54 16 36 6 26 24
-           L20 268
-           C18 292 36 304 56 294
-           Z" fill="#fff" stroke="#0b0f4a" stroke-width="2"/>
-  <!-- front chassis face — tall rounded pill, CAD 3/4 -->
-  <path d="M56 34
-           C56 10 74 2 98 2
-           L138 2
-           C166 2 176 18 176 44
-           L176 262
-           C176 290 158 304 128 304
-           L78 304
-           C58 304 56 286 56 268
-           Z" fill="#fff" stroke="#0b0f4a" stroke-width="2"/>
-  <!-- front / side seam -->
-  <path d="M56 42 V286" fill="none" stroke="#0b0f4a" stroke-width="1.35"/>
-  <!-- recessed front panel (readable face on angled body) -->
-  <path d="M74 38
-           L154 34
-           C160 34 164 40 164 48
-           L164 268
-           C164 278 158 284 148 284
-           L78 288
-           C72 288 70 282 70 274
-           L70 48
-           C70 40 72 38 74 38 Z" fill="#eef0f3" stroke="#0b0f4a" stroke-width="1.5"/>
-  <path d="M76 42 L150 38 L150 42 L76 46 Z" fill="#2a3144" opacity=".12"/>
-  <!-- status LED -->
-  <rect x="110" y="48" width="5" height="15" rx="1.5" fill="#1fc37a" class="ledpulse"/>
-  <!-- ports 2×5 on front face -->
-  <g fill="#fff" stroke="#0b0f4a" stroke-width="1.4">
-    <circle cx="94" cy="88" r="6.8"/><circle cx="132" cy="86" r="6.8"/>
-    <circle cx="94" cy="126" r="6.8"/><circle cx="132" cy="124" r="6.8"/>
-    <circle cx="94" cy="164" r="6.8"/><circle cx="132" cy="162" r="6.8"/>
-    <circle cx="94" cy="202" r="6.8"/><circle cx="132" cy="200" r="6.8"/>
-    <circle cx="94" cy="240" r="6.8"/><circle cx="132" cy="238" r="6.8"/>
-  </g>
-  <g fill="#0b0f4a">
-    <circle cx="94" cy="88" r="2"/><circle cx="132" cy="86" r="2"/>
-    <circle cx="94" cy="126" r="2"/><circle cx="132" cy="124" r="2"/>
-    <circle cx="94" cy="164" r="2"/><circle cx="132" cy="162" r="2"/>
-    <circle cx="94" cy="202" r="2"/><circle cx="132" cy="200" r="2"/>
-    <circle cx="94" cy="240" r="2"/><circle cx="132" cy="238" r="2"/>
-  </g>
-  <g class="mono-s" fill="#6b7380" font-size="6" text-anchor="middle">
-    <text x="94" y="78">AI1</text><text x="132" y="76">AI2</text>
-    <text x="94" y="116">AO1</text><text x="132" y="114">AO2</text>
-    <text x="94" y="154">DI1</text><text x="132" y="152">DI2</text>
-    <text x="94" y="192">DO1</text><text x="132" y="190">DO2</text>
-    <text x="94" y="230">ETH</text><text x="132" y="228">RS485</text>
-  </g>
-  <!-- wordmark on upper left chassis (CAD: horizontal + green brackets) -->
-  <path d="M28 22 V12 H40" fill="none" stroke="#1fc37a" stroke-width="2"/>
-  <text x="44" y="22" font-family="Inter,Arial,sans-serif" font-size="9.5" font-weight="700" fill="#0b0f4a">FlexiConnect</text>
-  <path d="M128 26 H138 V36" fill="none" stroke="#1fc37a" stroke-width="1.7"/>
-  <text x="108" y="336" text-anchor="middle" class="mono-s" fill="#8a90a0">FLEXICONNECT</text>
-  <circle cx="113" cy="164" r="8" class="decide-ring"/>
+<path d="M240 172 C 300 110 360 290 462 250" class="sb"/><path d="M240 172 C 300 110 360 290 462 250" class="sf"/>
+<path d="M250 92 C 350 92 400 240 462 270" class="sb"/><path d="M250 92 C 350 92 400 240 462 270" class="sf" style="animation-delay:-0.6s"/>
+<path d="M282 462 C 350 462 400 340 462 310" class="sb"/><path d="M282 462 C 350 462 400 340 462 310" class="sf" style="animation-delay:-0.3s"/>
+<!--
+  FlexiConnect — CAD front-left 3/4 angle & geometry (derived from product
+  render, outlined as illustration). Same form as photo; not a redrawn guess.
+-->
+<g class="fc-illu" transform="translate(458 95)">
+  <image href="assets/img/flexiconnect-illu.png" xlink:href="assets/img/flexiconnect-illu.png" x="0" y="0" width="186" height="290" preserveAspectRatio="xMidYMax meet"/>
+  <circle cx="118" cy="150" r="8" class="decide-ring" fill="none"/>
+  <text x="93" y="312" text-anchor="middle" class="mono-s" fill="#8a90a0">FLEXICONNECT</text>
 </g>
 </svg>
       <div class="sim-label"><i></i>Illustrative simulation</div>

@@ -208,12 +208,12 @@
 
     var travel = 1;
     var sticky = sec.querySelector(".tl-scrub__sticky");
-    var stickyTop = 114;
+    var stickyTop = 78;
 
     function measure() {
       if (sticky) {
         var topVal = parseFloat(window.getComputedStyle(sticky).top);
-        stickyTop = isNaN(topVal) ? 114 : topVal;
+        stickyTop = isNaN(topVal) ? 78 : topVal;
       }
       travel = Math.max(1, sec.offsetHeight - (window.innerHeight - stickyTop));
       rows.forEach(function (r) {

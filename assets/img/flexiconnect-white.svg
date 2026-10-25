@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 720" role="img" aria-label="FlexiConnect design concept product image">
-  <rect width="640" height="720" fill="#fafbfc"/>
-  <rect x="48" y="48" width="544" height="624" fill="#f4f5f7" stroke="#e4e6ec" stroke-width="1.5" rx="22"/>
-  <path d="M80 100 V72 H120" fill="none" stroke="#1fc37a" stroke-width="4"/>
-  <path d="M560 648 H520 V676" fill="none" stroke="#1fc37a" stroke-width="4"/>
-  <text x="320" y="360" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="#0b0f4a">Product image</text>
-  <text x="320" y="392" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#8a90a0">Design concept · white / graphite</text>
-</svg>

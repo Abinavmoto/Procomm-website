@@ -9,10 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body id="top">
-<div class="preview-flag"><b>DESIGN PREVIEW</b> · not published · concept renders · live data is an illustrative simulation</div>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="read-progress" id="read-progress" aria-hidden="true"></div>
 
 <nav class="site-nav" id="nav"><div class="wrap nav-in">
@@ -30,6 +31,7 @@
   <a href="contact.html" class="btn btn-g nav-cta">Request demo</a>
   <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="links"><span></span><span></span><span></span></button>
 </div></nav>
+<main id="main">
 
 <header class="hero"><div class="wrap">
   <div class="hero-grid">
@@ -80,26 +82,19 @@
 <path d="M240 172 C 300 110 360 290 432 300" class="sb"/><path d="M240 172 C 300 110 360 290 432 300" class="sf"/>
 <path d="M250 92 C 350 92 360 320 432 325" class="sb"/><path d="M250 92 C 350 92 360 320 432 325" class="sf" style="animation-delay:-0.6s"/>
 <path d="M282 462 C 350 462 380 378 432 375" class="sb"/><path d="M282 462 C 350 462 380 378 432 375" class="sf" style="animation-delay:-0.3s"/>
-<g transform="translate(430 165)">
-  <rect x="0" y="0" width="200" height="280" rx="18" fill="#e9ebee" stroke="#c4c9d0"/>
-  <path d="M16 28 V14 H34" fill="none" stroke="#1fc37a" stroke-width="3"/>
-  <text x="24" y="48" font-family="Inter,Arial,sans-serif" font-weight="700" font-size="14" fill="#0b0f4a">FlexiConnect</text>
-  <circle cx="176" cy="28" r="4" fill="#1fc37a"/><circle cx="176" cy="28" r="9" fill="#1fc37a" opacity=".25" class="led"/>
-  <text x="24" y="78" class="mono-s" fill="#8a90a0">FRONT · LEMO</text>
-  <circle cx="40" cy="110" r="10" fill="#1b1d22"/><circle cx="70" cy="110" r="10" fill="#1b1d22"/>
-  <circle cx="100" cy="110" r="10" fill="#1b1d22"/><circle cx="130" cy="110" r="10" fill="#1b1d22"/>
-  <circle cx="40" cy="148" r="10" fill="#1b1d22"/><circle cx="70" cy="148" r="10" fill="#1b1d22"/>
-  <circle cx="100" cy="148" r="10" fill="#1b1d22"/><circle cx="130" cy="148" r="10" fill="#1b1d22"/>
-  <text x="24" y="190" class="mono-s" fill="#8a90a0">LOCAL RECIPE CONTROL</text>
-  <rect x="24" y="210" width="152" height="44" rx="8" fill="#fff" stroke="#e4e6ec"/>
-  <text x="36" y="236" font-family="JetBrains Mono,monospace" font-size="11" fill="#14a565">● RUN · STEP 04</text>
-</g>
-<circle cx="560" cy="229" r="8" class="decide-ring"/>
 </svg>
+      <div class="hero-device">
+        <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span>
+        <span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+        <picture>
+          <source srcset="assets/img/flexiconnect-ss304.webp" type="image/webp">
+          <img src="assets/img/flexiconnect-ss304.jpg" width="864" height="1152" alt="FlexiConnect controller CAD render" decoding="async">
+        </picture>
+      </div>
       <div class="sim-label"><i></i>Illustrative simulation</div>
       <div class="chip mh" style="left:0;top:14%"><small>stirrer</small><b id="v-rpm">300</b> rpm<span class="q">q=OK</span></div>
-      <div class="chip" style="left:37%;top:27%"><small>T_reactor</small><b id="v-tr">62.4</b> °C<span class="q">q=OK</span></div>
-      <div class="chip" style="left:57%;top:2%"><small>dose · antisolvent</small><b id="v-dose">18.4</b> / 33.3 mL</div>
+      <div class="chip" style="left:28%;top:30%"><small>T_reactor</small><b id="v-tr">62.4</b> °C<span class="q">q=OK</span></div>
+      <div class="chip" style="left:8%;top:2%"><small>dose · antisolvent</small><b id="v-dose">18.4</b> / 33.3 mL</div>
       <div class="chip mh" style="left:0;top:60%"><small>T_jacket</small><b id="v-tj">58.1</b> °C<span class="q">q=OK</span></div>
       <div class="toast" id="toast"><small>● Recipe event <span id="t-time">19:24:07.412</span></small><span id="t-msg">Step 4 · Seed · hold 30 min</span></div>
     </div>
@@ -211,7 +206,7 @@
 
 <section id="hardware"><div class="wrap">
   <div class="sec-idx rv"><span>// 04 · THE BODY</span><span>FLEXICONNECT</span></div>
-  <div class="sec-head rv"><div><h2>The controller beside the reactor.</h2></div><p>Satin SS304 body with a black ABS front panel. It wires into the instruments around your vessel.</p></div>
+  <div class="sec-head rv"><div><h2>The controller beside the reactor.</h2></div><p>Satin stainless or powder-coated white, with a graphite front panel. It wires into the instruments around your vessel.</p></div>
   <div class="hw-stage">
     <div class="finish hw-card-tilt rv">
       <div class="frame">
@@ -225,14 +220,17 @@
       <h4><span class="swatch" style="background:linear-gradient(135deg,#e6e8eb,#9ba2ab)"></span>Satin SS304</h4>
       <p>CAD render · satin stainless · black front panel</p>
     </div>
-    <div class="finish concept hw-card-tilt rv" style="--d:.1s">
+    <div class="finish hw-card-tilt rv" style="--d:.1s">
       <div class="frame">
         <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span>
         <span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
-        <img src="assets/img/flexiconnect-white.svg" width="640" height="720" alt="FlexiConnect white graphite design concept" loading="lazy">
+        <picture>
+          <source srcset="assets/img/flexiconnect-white.webp" type="image/webp">
+          <img src="assets/img/flexiconnect-white.jpg" width="864" height="1152" alt="FlexiConnect powder-coated white CAD render" loading="lazy">
+        </picture>
       </div>
-      <h4><span class="swatch" style="background:linear-gradient(135deg,#fff,#dfe2e7)"></span>White / graphite</h4>
-      <p>Design concept</p>
+      <h4><span class="swatch" style="background:linear-gradient(135deg,#fff,#dfe2e7)"></span>Powder-coated white</h4>
+      <p>CAD render · white body · graphite front panel</p>
     </div>
   </div>
   <div class="feat rv">
@@ -317,6 +315,7 @@
   <a href="contact.html" class="btn btn-g">Request a demo <span class="ar" aria-hidden="true">→</span></a>
 </div></section>
 
+</main>
 <footer class="site-footer"><div class="wrap foot">
   <div>
     <a href="index.html" aria-label="Procomm Dynamics home">

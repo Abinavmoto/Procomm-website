@@ -4,8 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>For reactor makers — Procomm Dynamics</title>
-<meta name="description" content="OEM partnership enquiry for lab reactor manufacturers interested in FlexiConnect and FlexiFlow.">
+<title>Lab Reactor OEM Automation Partnerships | Procomm Dynamics</title>
+<meta name="description" content="Reactor manufacturers can enquire about planned FlexiConnect hardware and FlexiFlow recipe-software integration for lab-scale jacketed reactors.">
+<link rel="canonical" href="https://procommdynamics.com/reactor-makers.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Procomm Dynamics">
+<meta property="og:title" content="Lab Reactor OEM Automation Partnerships | Procomm Dynamics">
+<meta property="og:description" content="Reactor manufacturers can enquire about planned FlexiConnect hardware and FlexiFlow recipe-software integration for lab-scale jacketed reactors.">
+<meta property="og:url" content="https://procommdynamics.com/reactor-makers.html">
+<meta property="og:image" content="https://procommdynamics.com/assets/img/flexiconnect-ss304-studio.jpg">
+<meta property="og:image:alt" content="Concept visualization of FlexiConnect laboratory reactor controller">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lab Reactor OEM Automation Partnerships | Procomm Dynamics">
+<meta name="twitter:description" content="Reactor manufacturers can enquire about planned FlexiConnect hardware and FlexiFlow recipe-software integration for lab-scale jacketed reactors.">
+<meta name="twitter:image" content="https://procommdynamics.com/assets/img/flexiconnect-ss304-studio.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -63,11 +75,13 @@
       <p class="lead">Tell us about your product line and how you might integrate FlexiConnect. Lab demo requests go to <a href="contact.html">Contact</a>.</p>
     </div>
     <div>
-      <div id="partner-success" tabindex="-1" hidden>
-        <h3 style="font-size:24px;margin-bottom:8px">Thank you.</h3>
-        <p>If your email client opened, send the message to finish. Otherwise email us at <a href="mailto:info@procommdynamics.com">info@procommdynamics.com</a> with subject “OEM partnership enquiry”.</p>
-      </div>
-      <form id="partner-form" action="#" method="post">
+      <form id="partner-form" action="https://formsubmit.co/info@procommdynamics.com" method="POST" data-draft="oem">
+        <input type="hidden" name="_subject" value="[Procomm] New OEM partnership enquiry">
+        <input type="hidden" name="_next" value="https://procommdynamics.com/thanks.html?form=oem">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_url" value="https://procommdynamics.com/reactor-makers.html">
+        <input type="hidden" name="form_type" value="OEM partnership">
+        <div class="hp-field" aria-hidden="true"><label for="oem-trap">Leave this field empty</label><input id="oem-trap" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
         <div>
           <label for="p-name">Name</label>
           <input id="p-name" name="name" autocomplete="name" required>
@@ -111,6 +125,11 @@
           <label for="p-message">How would you like to integrate?</label>
           <textarea id="p-message" name="message" rows="4" placeholder="Hardware bundle, co-branding, software licensing, timeline…"></textarea>
         </div>
+        <div class="full draft-status-row">
+          <p class="form-draft-status" role="status" aria-live="polite">Your unfinished enquiry is saved on this device as you type.</p>
+          <button class="clear-draft" type="button">Clear saved draft</button>
+        </div>
+        <div class="full form-privacy">Draft details remain in this browser for up to seven days, unless you clear them. Sending uses FormSubmit's email service; no Procomm lead database is created. Please avoid entering sensitive research or confidential process data. <a href="https://formsubmit.co/privacy.pdf" target="_blank" rel="noopener noreferrer">Form service privacy</a>.</div>
         <div class="full form-actions">
           <button class="btn btn-g" type="submit">Send partner enquiry <span class="ar" aria-hidden="true">→</span></button>
           <span class="form-note" aria-live="polite"></span>

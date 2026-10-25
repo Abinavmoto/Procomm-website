@@ -1,223 +1,93 @@
 /**
- * Browser QA for overnight MicroAGI scrub (desktop + mobile viewports).
- * Run: node --test tests/tl-scrub.qa.mjs
+ * Homepage, responsive and conversion regression tests.
+ * Run: npm run test:qa
  */
 import assert from "node:assert/strict";
-import http from "node:http";
-import { createRequire } from "node:module";
+import { test } from "node:test";
+import { readFileSync } from "node:fs";
 import path from "node:path";
-import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import { test, before, after } from "node:test";
 
-const require = createRequire(import.meta.url);
-const puppeteer = require("puppeteer-core");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const read = (name) => readFileSync(path.join(root, name), "utf8");
+const home = read("index.html");
+const css = read("css/styles.css");
+const js = read("js/main.js");
+const thanksJs = read("js/thanks.js");
+const demo = read("contact.html");
+const oem = read("reactor-makers.html");
+const hardware = read("flexiconnect.html");
+const apps = read("applications.html");
+const about = read("about.html");
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "..");
-const CHROME =
-  process.env.CHROME_PATH ||
-  "/usr/bin/google-chrome-stable";
-
-const MIME = {
-  ".html": "text/html; charset=utf-8",
-  ".css": "text/css; charset=utf-8",
-  ".js": "application/javascript; charset=utf-8",
-  ".cjs": "application/javascript; charset=utf-8",
-  ".svg": "image/svg+xml",
-  ".png": "image/png",
-  ".webp": "image/webp",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".ico": "image/x-icon",
-};
-
-let server;
-let baseUrl;
-let browser;
-
-function startStaticServer() {
-  return new Promise((resolve, reject) => {
-    server = http.createServer((req, res) => {
-      const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
-      const rel = urlPath === "/" ? "/index.html" : urlPath;
-      const file = path.normalize(path.join(ROOT, rel));
-      if (!file.startsWith(ROOT)) {
-        res.writeHead(403);
-        res.end("forbidden");
-        return;
-      }
-      fs.readFile(file, (err, data) => {
-        if (err) {
-          res.writeHead(404);
-          res.end("missing");
-          return;
-        }
-        const ext = path.extname(file).toLowerCase();
-        res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
-        res.end(data);
-      });
-    });
-    server.listen(0, "127.0.0.1", () => {
-      const { port } = server.address();
-      baseUrl = `http://127.0.0.1:${port}`;
-      resolve();
-    });
-    server.on("error", reject);
-  });
-}
-
-async function scrubSnapshot(page) {
-  return page.evaluate(() => {
-    const sec = document.getElementById("overnightSec");
-    const sticky = sec && sec.querySelector(".tl-scrub__sticky");
-    const scroll = sec && sec.querySelector(".tl-scrub__scroll");
-    const withRow = sec && sec.querySelector(".tlx__row:not(.tlx__row--without)");
-    const withoutRow = sec && sec.querySelector(".tlx__row--without");
-    function rowState(row) {
-      if (!row) return null;
-      const head = row.querySelector(".tlx__head");
-      const track = row.querySelector(".tlx__track");
-      const prog =
-        row.querySelector(".tlx__prog--full") ||
-        row.querySelector(".tlx__prog--dash") ||
-        row.querySelector(".tlx__prog");
-      const nodes = Array.from(row.querySelectorAll(".tlx__node"));
-      const t = head ? head.style.transform || "" : "";
-      const m = /translate3d\(([-\d.]+)px/.exec(t);
-      const headX = m ? parseFloat(m[1]) : 0;
-      const tw = track ? track.getBoundingClientRect().width : 1;
-      const scale =
-        prog && prog.style.transform
-          ? parseFloat((/scaleX\(([-\d.]+)\)/.exec(prog.style.transform) || [])[1] || "0")
-          : 0;
-      return {
-        headX,
-        headProgress: tw > 0 ? headX / tw : 0,
-        scaleX: scale,
-        onCount: nodes.filter((n) => n.classList.contains("on")).length,
-        nodeCount: nodes.length,
-      };
-    }
-    const cs = sticky ? getComputedStyle(sticky) : null;
-    return {
-      hasSection: !!sec,
-      stickyPosition: cs ? cs.position : null,
-      stickyTop: cs ? cs.top : null,
-      scrollHeightPx: scroll ? scroll.getBoundingClientRect().height : 0,
-      sectionHeight: sec ? sec.offsetHeight : 0,
-      viewport: window.innerHeight,
-      with: rowState(withRow),
-      without: rowState(withoutRow),
-    };
-  });
-}
-
-async function scrollSection(page, fraction) {
-  await page.evaluate((frac) => {
-    // Disable smooth scrolling so headless scroll settles immediately
-    document.documentElement.style.scrollBehavior = "auto";
-    document.body.style.scrollBehavior = "auto";
-    const sec = document.getElementById("overnightSec");
-    const sticky = sec.querySelector(".tl-scrub__sticky");
-    const stickyTop = parseFloat(getComputedStyle(sticky).top) || 0;
-    const travel = Math.max(1, sec.offsetHeight - (window.innerHeight - stickyTop));
-    const secDocTop = sec.getBoundingClientRect().top + window.scrollY;
-    // p = (stickyTop - secTop) / travel  →  secTop = stickyTop - p*travel
-    const targetSecTop = stickyTop - travel * frac;
-    const y = Math.max(0, secDocTop - targetSecTop);
-    document.documentElement.scrollTop = y;
-    document.body.scrollTop = y;
-    window.scrollTo(0, y);
-  }, fraction);
-  await new Promise((r) => setTimeout(r, 80));
-  await page.evaluate(
-    () =>
-      new Promise((r) => {
-        requestAnimationFrame(() => requestAnimationFrame(r));
-      })
-  );
-}
-
-before(async () => {
-  await startStaticServer();
-  browser = await puppeteer.launch({
-    executablePath: CHROME,
-    headless: "new",
-    args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"],
-  });
+test("new homepage introduces tagline then the two products", () => {
+  assert.match(home, /<h1>Experience<br><em>truly automated\.<\/em><\/h1>/);
+  assert.equal((home.match(/<h1\b/g) || []).length, 1);
+  const hero = home.indexOf('id="experience"');
+  const products = home.indexOf('id="products"');
+  const approach = home.indexOf('class="approach-section"');
+  assert.ok(hero >= 0 && products > hero && approach > products);
+  assert.match(home, /Our products\./);
+  assert.match(home, /href="flexiflow\.html" class="product-card__link"/);
+  assert.match(home, /href="flexiconnect\.html" class="product-card__link"/);
+  assert.match(home, /assets\/img\/flexiconnect-ss304-studio\.jpg/);
 });
 
-after(async () => {
-  if (browser) await browser.close();
-  if (server) await new Promise((r) => server.close(r));
-});
-
-async function withViewport(size, fn) {
-  const page = await browser.newPage();
-  await page.setViewport(size);
-  await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "no-preference" }]);
-  await page.goto(`${baseUrl}/index.html`, { waitUntil: "networkidle0", timeout: 30000 });
-  await page.waitForSelector("#overnightSec");
-  try {
-    await fn(page);
-  } finally {
-    await page.close();
+test("sections are visually deliberate and mobile layouts are present", () => {
+  for (const name of [".brand-hero", ".product-grid", ".workflow-screen", ".approach-steps", ".application-spotlight", ".brand-outro"]) {
+    assert.ok(css.includes(name), name);
   }
-}
-
-test("QA desktop: sticky scrub runway and With-leads-Without", async () => {
-  await withViewport({ width: 1280, height: 800 }, async (page) => {
-    const at0 = await scrubSnapshot(page);
-    assert.equal(at0.hasSection, true);
-    assert.equal(at0.stickyPosition, "sticky");
-    assert.ok(at0.scrollHeightPx > at0.viewport * 1.5, "scroll runway should be tall");
-
-    await scrollSection(page, 0.2);
-    const mid = await scrubSnapshot(page);
-    assert.ok(
-      mid.with.headProgress > mid.without.headProgress,
-      `With us should lead Without at 20% (with=${mid.with.headProgress}, without=${mid.without.headProgress})`
-    );
-
-    await scrollSection(page, 0.45);
-    const held = await scrubSnapshot(page);
-    assert.ok(held.with.headProgress >= 0.98, "With us should be complete by mid runway");
-    assert.ok(held.without.headProgress < 0.95, "Without should still be trailing");
-    assert.equal(held.with.onCount, held.with.nodeCount);
-
-    await scrollSection(page, 1);
-    const end = await scrubSnapshot(page);
-    assert.ok(end.with.headProgress >= 0.98);
-    assert.ok(end.without.headProgress >= 0.98);
-  });
+  assert.match(css, /@media\(max-width:600px\)/);
+  assert.match(css, /\.product-grid \{grid-template-columns:1fr;/);
+  assert.match(css, /\.brand-hero__inner \{display:flex;flex-direction:column;/);
+  assert.match(css, /\.approach-steps \{grid-template-columns:1fr;/);
+  assert.doesNotMatch(home, /id="overnightSec"|class="scene-svg"/);
+  assert.doesNotMatch(js, /setInterval|scene\.style\.transform/);
 });
 
-test("QA mobile 390px: scrub is NOT static; sticky + progress", async () => {
-  await withViewport({ width: 390, height: 844 }, async (page) => {
-    const at0 = await scrubSnapshot(page);
-    assert.equal(at0.stickyPosition, "sticky", "mobile must stay sticky (not static)");
-    assert.ok(at0.scrollHeightPx > at0.viewport * 2, "mobile needs scrub runway");
-
-    await scrollSection(page, 0.15);
-    const early = await scrubSnapshot(page);
-    assert.ok(early.with.headProgress > 0.05, "scroll should advance With us");
-    assert.ok(early.with.headProgress >= early.without.headProgress);
-
-    await scrollSection(page, 0.5);
-    const mid = await scrubSnapshot(page);
-    assert.ok(mid.with.headProgress >= 0.98, "With us holds complete on mobile");
-    assert.ok(mid.without.headProgress <= mid.with.headProgress + 0.01);
-  });
+test("product labels are factual and applications stay focused", () => {
+  assert.match(home, /DEVELOPMENT PREVIEW/);
+  assert.match(home, /DESIGN PREVIEW/);
+  assert.doesNotMatch(home + hardware, /DB15|2× RJ45/);
+  assert.match(hardware, /DB9/);
+  assert.match(hardware, /White \/ graphite — design concept/);
+  assert.doesNotMatch(apps, /Polymerisation|Fermentation|Fertilisers|Extraction &amp; distillation/);
+  assert.match(apps, /Chemical synthesis/);
+  assert.match(apps, /Crystallisation/);
+  assert.doesNotMatch(about, /We started as an automation|Then we hit a real requirement/);
 });
 
-test("QA CSS contract: no mobile static override for tl-scrub sticky", () => {
-  const css = fs.readFileSync(path.join(ROOT, "css/styles.css"), "utf8");
-  assert.equal(
-    /@media \(max-width:\s*820px\)[\s\S]*?\.tl-scrub__sticky\s*\{[^}]*position:\s*static/i.test(css),
-    false,
-    "820px breakpoint must not force .tl-scrub__sticky { position: static }"
-  );
-  assert.match(css, /\.tl-scrub__sticky\s*\{[^}]*position:\s*sticky/s);
-  assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*?\.tl-scrub__scroll\s*\{[^}]*height:\s*280vh/s);
+test("both forms use native HTML POST to the email relay and remain visible", () => {
+  for (const [html,kind] of [[demo,"demo"],[oem,"oem"]]) {
+    assert.match(html, /method="POST" data-draft="/);
+    assert.match(html, /action="https:\/\/formsubmit\.co\/info@procommdynamics\.com"/);
+    assert.ok(html.includes('name="_next" value="https://procommdynamics.com/thanks.html?form=' + kind + '"'));
+    assert.match(html, /name="_honey"/);
+    assert.match(html, /class="clear-draft"/);
+    assert.match(html, /class="form-draft-status"/);
+    assert.doesNotMatch(html, /<form[^>]+hidden/);
+    assert.doesNotMatch(html, /form-unavailable/);
+  }
+  assert.doesNotMatch(js, /window\.location\.href|mailto:/);
+});
+
+test("browser stores drafts temporarily, restores fields and retains unsent values", () => {
+  assert.match(js, /var TTL = 7 \* 24 \* 60 \* 60 \* 1000;/);
+  assert.match(js, /localStorage\.setItem\(draftKey\(kind\)/);
+  assert.match(js, /localStorage\.getItem\(draftKey\(kind\)/);
+  assert.match(js, /el\.value = draft\.values\[el\.name\]/);
+  assert.match(js, /form\.addEventListener\("input", queueSave\)/);
+  assert.match(js, /window\.addEventListener\("pagehide"/);
+  assert.match(js, /sessionStorage\.setItem\(pendingKey\(kind\)/);
+  assert.doesNotMatch(js, /localStorage\.removeItem\(draftKey\(kind\)\);\s*\/\* Native form POST/);
+  assert.match(thanksJs, /if \(confirmed\)/);
+  assert.match(thanksJs, /localStorage\.removeItem/);
+  assert.match(thanksJs, /Submission not verified\./);
+});
+
+test("thank-you page is noindex and does not claim inbox delivery", () => {
+  const thanks = read("thanks.html");
+  assert.match(thanks, /noindex, nofollow/);
+  assert.match(thanks, /Checking the submission\./);
+  assert.match(thanks, /not a guarantee of inbox delivery/);
 });

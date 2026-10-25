@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 84" role="img" aria-label="ProComm Dynamics">
+  <defs>
+    <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9ced6"/><stop offset=".45" stop-color="#8a929e"/><stop offset=".55" stop-color="#6b7380"/><stop offset="1" stop-color="#a7aeb8"/>
+    </linearGradient>
+  </defs>
+  <path d="M6 30 V6 H58" fill="none" stroke="#1fc37a" stroke-width="8"/>
+  <path d="M500 78 H552 V54" fill="none" stroke="#1fc37a" stroke-width="8"/>
+  <text x="26" y="60" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-weight="800" font-size="50" letter-spacing="-1">
+    <tspan fill="#0b0f4a">Pro</tspan><tspan fill="url(#steel)">Comm</tspan><tspan fill="#0b0f4a" dx="12">Dynamics</tspan>
+  </text>
+</svg>

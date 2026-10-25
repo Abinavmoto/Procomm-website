@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>FlexiConnect — Procomm Dynamics</title>
+<meta name="description" content="Stainless-steel lab reactor controller with LEMO I/O, serial and Ethernet, STM32H7 and Part 11-style audit logging.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+<div class="preview-flag"><b>DESIGN PREVIEW</b> · not published · concept renders · live data is an illustrative simulation</div>
+
+<nav class="site-nav" id="nav"><div class="wrap nav-in">
+  <a href="index.html" aria-label="Procomm Dynamics home">
+    <img class="logo-img" src="assets/logo.svg" width="280" height="42" alt="Procomm Dynamics">
+  </a>
+  <div class="links" id="links">
+    <a href="flexiconnect.html" aria-current="page">FlexiConnect</a>
+    <a href="how-it-works.html">How it works</a>
+    <a href="recipes.html">Recipes</a>
+    <a href="integrations.html">Integrations</a>
+    <a href="reactor-makers.html">For reactor makers</a>
+    <a href="about.html">About</a>
+  </div>
+  <a href="contact.html" class="btn btn-g nav-cta">Request a demo</a>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="links"><span></span><span></span><span></span></button>
+</div></nav>
+
+<header class="page-hero"><div class="wrap">
+  <span class="eyebrow">Hardware</span>
+  <h1>FlexiConnect.<br>The body of the <em>system.</em></h1>
+  <p class="lead">A rugged stainless-steel controller that sits beside your jacketed glass reactor. Sense on the front. Communications on the back. Decide on-device.</p>
+</div></header>
+
+<section style="padding-top:40px"><div class="wrap">
+  <div class="hw-stage">
+    <div class="finish rv">
+      <div class="frame">
+        <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span>
+        <span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+        <img src="assets/img/flexiconnect-ss304-placeholder.svg" width="640" height="720" alt="FlexiConnect satin SS304 — render coming" loading="lazy">
+      </div>
+      <h4><span class="swatch" style="background:linear-gradient(135deg,#e6e8eb,#9ba2ab)"></span>Satin SS304</h4>
+      <p>brushed stainless body</p>
+    </div>
+    <div class="finish rv" style="--d:.1s">
+      <div class="frame">
+        <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span>
+        <span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+        <img src="assets/img/flexiconnect-white-placeholder.svg" width="640" height="720" alt="FlexiConnect white graphite — render coming" loading="lazy">
+      </div>
+      <h4><span class="swatch" style="background:linear-gradient(135deg,#fff,#dfe2e7)"></span>White / graphite</h4>
+      <p>powder-coat body · graphite panel</p>
+    </div>
+  </div>
+  <p class="caption">Placeholder frames labelled “render coming”. Replace with final product photography when ready. Early concept renders with front-panel serial ports are out of date — label those “concept render”.</p>
+</div></section>
+
+<section class="grey"><div class="wrap">
+  <div class="sec-idx rv"><span>// LAYOUT</span><span>SETTLED DESIGN</span></div>
+  <div class="sec-head rv"><div><h2>Front for chemistry. Back for the lab network.</h2></div><p>LEMO on the front for sensors and actuators. Communications and expansion on the rear.</p></div>
+  <div class="panel-grid">
+    <div class="panel rv">
+      <span class="eyebrow">Front panel</span>
+      <h3>LEMO connectors</h3>
+      <p>Direct ties into the reaction: temperature, analog loops and discrete I/O.</p>
+      <ul>
+        <li>RTD inputs <span>2×</span></li>
+        <li>Analog in (AI) <span>2×</span></li>
+        <li>Analog out (AO) <span>2×</span></li>
+        <li>Digital in (DI) <span>2×</span></li>
+        <li>Digital out (DO) <span>2×</span></li>
+        <li>Notification LED <span>run state</span></li>
+      </ul>
+    </div>
+    <div class="panel rv" style="--d:.1s">
+      <span class="eyebrow">Back panel</span>
+      <h3>Communications &amp; power</h3>
+      <p>Serial and fieldbus on a DB15, plus dedicated network and service ports.</p>
+      <ul>
+        <li>RS232 <span>2× via DB15</span></li>
+        <li>RS485 <span>1× via DB15</span></li>
+        <li>CAN <span>via DB15</span></li>
+        <li>Ethernet <span>2× RJ45</span></li>
+        <li>USB <span>service / local PC</span></li>
+        <li>Add-on modules <span>extra RTDs &amp; comms</span></li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-idx rv"><span>// BASE I/O</span><span>AS SHIPPED</span></div>
+  <div class="spec-grid">
+    <div class="spec-card rv">
+      <h3>I/O summary</h3>
+      <ul class="spec-list">
+        <li><span class="k">RTD</span><b>2</b></li>
+        <li><span class="k">Analog in</span><b>2</b></li>
+        <li><span class="k">Analog out</span><b>2</b></li>
+        <li><span class="k">Digital in</span><b>2</b></li>
+        <li><span class="k">Digital out</span><b>2</b></li>
+        <li><span class="k">RS232</span><b>2</b></li>
+        <li><span class="k">RS485</span><b>1</b></li>
+        <li><span class="k">Ethernet</span><b>2× RJ45</b></li>
+      </ul>
+    </div>
+    <div class="spec-card rv" style="--d:.1s">
+      <h3>Control &amp; record</h3>
+      <ul class="spec-list">
+        <li><span class="k">MCU</span><b>STM32H7</b></li>
+        <li><span class="k">Engine</span><b>C99 control, 10 ms tick</b></li>
+        <li><span class="k">Audit</span><b>Part 11-style logging</b></li>
+        <li><span class="k">Safety</span><b>Independent hardware stop</b></li>
+        <li><span class="k">Expand</span><b>Add-on RTD &amp; comms modules</b></li>
+        <li><span class="k">Finish</span><b>Satin SS304 or white / graphite</b></li>
+        <li><span class="k">Fit</span><b>Designed for 1–50 L jacketed glass</b></li>
+        <li><span class="k">Origin</span><b>Designed in India</b></li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section class="cta-band grey"><div class="wrap rv">
+  <span class="eyebrow">Next</span>
+  <h2>See how a recipe runs on the controller.</h2>
+  <div class="ctas" style="justify-content:center">
+    <a href="how-it-works.html" class="btn btn-g">How it works <span class="ar" aria-hidden="true">→</span></a>
+    <a href="contact.html" class="btn btn-o">Request a demo</a>
+  </div>
+</div></section>
+
+<footer class="site-footer"><div class="wrap foot">
+  <a href="index.html" aria-label="Procomm Dynamics home">
+    <img class="logo-img" src="assets/logo.svg" width="220" height="33" alt="Procomm Dynamics">
+  </a>
+  <div class="foot-links">
+    <a href="flexiconnect.html">FlexiConnect</a>
+    <a href="how-it-works.html">How it works</a>
+    <a href="recipes.html">Recipes</a>
+    <a href="integrations.html">Integrations</a>
+    <a href="reactor-makers.html">Reactor makers</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <span class="mono">© 2026 Procomm Dynamics · physical AI for the chemistry lab</span>
+</div></footer>
+<script src="js/main.js" defer></script>
+</body>
+</html>

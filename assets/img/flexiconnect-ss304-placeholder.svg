@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 720" role="img" aria-label="FlexiConnect satin SS304 render coming">
+  <rect width="640" height="720" fill="#f4f5f7"/>
+  <rect x="48" y="48" width="544" height="624" fill="none" stroke="#e4e6ec" stroke-width="2" rx="22"/>
+  <path d="M80 100 V72 H120" fill="none" stroke="#1fc37a" stroke-width="4"/>
+  <path d="M560 648 H520 V676" fill="none" stroke="#1fc37a" stroke-width="4"/>
+  <text x="320" y="340" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="18" letter-spacing="0.14em" fill="#8a90a0">RENDER COMING</text>
+  <text x="320" y="372" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="600" fill="#0b0f4a">FlexiConnect · Satin SS304</text>
+  <text x="320" y="404" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#5d6478">Drop real render into /assets/img/</text>
+</svg>

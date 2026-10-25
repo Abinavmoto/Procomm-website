@@ -2693,6 +2693,7 @@ html.reduced body {
 .hero .scene { will-change: auto; transform: none !important; }
 .scene .ledpulse, .scene .led, .sim-label i, .scene .decide-ring { animation: none !important; }
 .scene .fc-illu image { opacity: 1; backface-visibility: hidden; }
+.scene, .scene * { animation: none !important; transition: none !important; }
 .toast.flash { animation: none !important; }
 .chip--dose { left: auto !important; top: auto !important; right: 0; bottom: 27%; z-index: 6; }
 

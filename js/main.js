@@ -137,6 +137,7 @@
       return;
     }
     if (unavailable) unavailable.hidden = true;
+    form.hidden = false;
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       if (!form.reportValidity()) return;

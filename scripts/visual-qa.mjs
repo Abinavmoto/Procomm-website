@@ -61,6 +61,10 @@ for (const { name, w, h } of sizes) {
   check(m.productCards.length===2 && m.productCards.every(c=>c.width > 200),name + " both product cards rendered");
   check(m.img.every(x=>x.ok),name + " images loaded (" + m.img.filter(x=>!x.ok).map(x=>x.src).join(",") + ")");
   await shot(page, "home-" + name + "-first");
+  if (process.env.QA_BASE64 === "1" && name === "390") {
+    const all = await page.screenshot({ type:"jpeg",quality:24,fullPage:true });
+    console.log("QA_IMAGE_BEGIN:mobile-full-390:"+all.toString("base64")+":QA_IMAGE_END");
+  }
   await page.locator("#products").scrollIntoViewIfNeeded();
   await page.waitForTimeout(200);
   await shot(page, "products-" + name + "-first");

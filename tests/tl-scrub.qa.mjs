@@ -20,29 +20,37 @@ const hardware = read("flexiconnect.html");
 const apps = read("applications.html");
 const about = read("about.html");
 
-test("new homepage introduces tagline then the two products", () => {
-  assert.match(home, /<h1>Experience<br><em>truly automated\.<\/em><\/h1>/);
+test("full-screen photographic homepage opens with Procomm tagline before products", () => {
+  assert.match(home, /<body id="top" class="home-page">/);
+  assert.match(home, /class="cinematic-hero" id="experience"/);
+  assert.match(home, /<h1 id="experience-title">Experience<br><em>truly automated\.<\/em><\/h1>/);
   assert.equal((home.match(/<h1\b/g) || []).length, 1);
+  assert.ok(home.includes('src="assets/img/flexiconnect-ss304-studio.jpg"'));
   const hero = home.indexOf('id="experience"');
   const products = home.indexOf('id="products"');
-  const approach = home.indexOf('class="approach-section"');
-  assert.ok(hero >= 0 && products > hero && approach > products);
+  const comparison = home.indexOf('id="comparison"');
+  const applications = home.indexOf('class="application-spotlight"');
+  assert.ok(hero >= 0 && products > hero && comparison > products && applications > comparison);
   assert.match(home, /Our products\./);
   assert.match(home, /href="flexiflow\.html" class="product-card__link"/);
   assert.match(home, /href="flexiconnect\.html" class="product-card__link"/);
-  assert.match(home, /assets\/img\/flexiconnect-ss304-studio\.jpg/);
 });
 
-test("sections are visually deliberate and mobile layouts are present", () => {
-  for (const name of [".brand-hero", ".product-grid", ".workflow-screen", ".approach-steps", ".application-spotlight", ".brand-outro"]) {
-    assert.ok(css.includes(name), name);
+test("full-bleed hero and restored comparison are mobile-ready without scroll trap", () => {
+  for (const selector of [".cinematic-hero", ".cinematic-hero__image", ".cinematic-hero__veil", ".product-grid", ".comparison-track", ".comparison-row", ".application-spotlight", ".brand-outro"]) {
+    assert.ok(css.includes(selector), selector);
   }
-  assert.match(css, /@media\(max-width:600px\)/);
-  assert.match(css, /\.product-grid \{grid-template-columns:1fr;/);
-  assert.match(css, /\.brand-hero__inner \{display:flex;flex-direction:column;/);
-  assert.match(css, /\.approach-steps \{grid-template-columns:1fr;/);
+  assert.match(css, /min-height: 100svh;/);
+  assert.match(css, /@media \(max-width: 600px\)/);
+  assert.match(css, /\.comparison-track \{ grid-template-columns: repeat\(2,minmax\(0,1fr\)\);/);
   assert.doesNotMatch(home, /id="overnightSec"|class="scene-svg"/);
   assert.doesNotMatch(js, /setInterval|scene\.style\.transform/);
+  assert.match(home, /<h3>With us<\/h3>/);
+  assert.match(home, /<h3>Without us<\/h3>/);
+  const section = home.slice(home.indexOf('<section class="comparison-section"'),home.indexOf('</section>',home.indexOf('<section class="comparison-section"')));
+  assert.equal((section.match(/class="comparison-track__number"/g) || []).length,10);
+  assert.equal((section.match(/<ol class="comparison-track"/g) || []).length,2);
+  assert.match(section, /subject to development, equipment integration and validation/);
 });
 
 test("product labels are factual and applications stay focused", () => {

@@ -49,7 +49,7 @@
 }
 </script>
 </head>
-<body id="top">
+<body id="top" class="home-page">
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="read-progress" id="read-progress" aria-hidden="true"></div>
 
@@ -70,29 +70,24 @@
 </div></nav>
 <main id="main">
 
-<header class="brand-hero" id="experience">
-  <div class="wrap brand-hero__inner">
-    <div class="brand-hero__copy">
-      <span class="brand-hero__eyebrow"><span class="brand-hero__dot" aria-hidden="true"></span> PROCOMM DYNAMICS <span class="brand-hero__slash">/</span> LABORATORY AUTOMATION</span>
-      <h1>Experience<br><em>truly automated.</em></h1>
-      <p class="brand-hero__lead">Recipe-driven automation for the jacketed glass reactor you already own. FlexiFlow plans the run; FlexiConnect is being developed to execute it locally and capture the process history.</p>
-      <div class="brand-hero__actions">
-        <a href="#products" class="btn btn-g">Explore our products <span class="ar" aria-hidden="true">→</span></a>
-        <a href="contact.html" class="brand-hero__secondary">Talk to us <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-    <div class="brand-hero__visual" aria-label="Concept image of the FlexiConnect stainless-steel laboratory controller">
-      <div class="brand-hero__visual-grid" aria-hidden="true"></div>
-      <div class="brand-hero__halo" aria-hidden="true"></div>
-      <picture class="brand-hero__product">
-        <img src="assets/img/flexiconnect-ss304-studio.jpg" width="864" height="1152" fetchpriority="high" alt="FlexiConnect satin stainless controller with black front panel, concept visualization">
-      </picture>
-      <div class="brand-hero__caption"><span>01 / FLEXICONNECT</span><span>PHYSICAL CONTROL INTERFACE · DESIGN PREVIEW</span></div>
+<header class="cinematic-hero" id="experience" aria-labelledby="experience-title">
+  <picture class="cinematic-hero__image" aria-hidden="true">
+    <img src="assets/img/flexiconnect-ss304-studio.jpg" width="864" height="1152" fetchpriority="high" decoding="async" alt="">
+  </picture>
+  <div class="cinematic-hero__veil" aria-hidden="true"></div>
+  <div class="wrap cinematic-hero__content">
+    <span class="cinematic-hero__eyebrow"><span class="cinematic-hero__live-dot" aria-hidden="true"></span> PROCOMM DYNAMICS / LABORATORY AUTOMATION</span>
+    <h1 id="experience-title">Experience<br><em>truly automated.</em></h1>
+    <p class="cinematic-hero__lead">Recipe-driven automation for the jacketed glass reactor you already own. Software to plan the run. Hardware designed to execute it and record the process.</p>
+    <div class="cinematic-hero__actions">
+      <a class="btn cinematic-hero__primary" href="#products">Explore products <span class="ar" aria-hidden="true">→</span></a>
+      <a class="cinematic-hero__link" href="contact.html">Request a demo <span aria-hidden="true">↗</span></a>
     </div>
   </div>
-  <div class="wrap brand-hero__end">
+  <div class="wrap cinematic-hero__foot">
     <span>RECIPE → EXECUTION → RECORD</span>
-    <span>SCIENTIFIC AUTOMATION · DEVELOPED IN MADURAI</span>
+    <span>FLEXICONNECT · SS304 DESIGN PREVIEW</span>
+    <a href="#products">Discover the system <span aria-hidden="true">↓</span></a>
   </div>
 </header>
 
@@ -149,26 +144,47 @@
   </div>
 </section>
 
-<section class="approach-section" aria-labelledby="approach-title">
+<section class="comparison-section" id="comparison" aria-labelledby="comparison-title">
   <div class="wrap">
-    <div class="approach-section__intro">
-      <span class="section-index">// 02 / THE SYSTEM</span>
-      <h2 id="approach-title">Built to connect<br><em>the digital and the physical.</em></h2>
-      <p>FlexiFlow creates the recipe. FlexiConnect is being developed to execute it at the reactor. The system is designed to keep a usable history of the run.</p>
+    <div class="comparison-intro">
+      <div>
+        <span class="section-index">// 02 / THE DIFFERENCE</span>
+        <h2 id="comparison-title">A long crystallisation.<br><em>Two ways to spend the night.</em></h2>
+      </div>
+      <p>The same recipe. Two approaches to the work around it. FlexiFlow is being designed to replace repeated manual steps with supervised recipe execution and a process record.</p>
     </div>
-    <div class="approach-steps">
-      <article><span>01 / SENSE</span><h3>Read the process.</h3><p>Bring temperatures and relevant instrument signals into context.</p></article>
-      <article><span>02 / EXECUTE</span><h3>Run the recipe.</h3><p>Apply temperature ramps, holds and dosing steps through local control.</p></article>
-      <article><span>03 / RECORD</span><h3>Keep the history.</h3><p>Review process values, events and operator actions from the run.</p></article>
+
+    <div class="comparison-board">
+      <div class="comparison-row comparison-row--with">
+        <div class="comparison-row__label"><span class="comparison-row__tag">WITH FLEXIFLOW</span><h3>With us</h3><p>Load the recipe. Follow the run.</p></div>
+        <ol class="comparison-track" aria-label="Illustrative recipe workflow with FlexiFlow">
+          <li><span class="comparison-track__number">01</span><strong>Load the recipe</strong><small>Define the steps</small></li>
+          <li><span class="comparison-track__number">02</span><strong>Start the run</strong><small>Controller executes locally</small></li>
+          <li><span class="comparison-track__number">03</span><strong>Monitor progress</strong><small>See the process state</small></li>
+          <li><span class="comparison-track__number">04</span><strong>Holds &amp; doses</strong><small>Steps follow the recipe</small></li>
+          <li><span class="comparison-track__number">05</span><strong>Review the record</strong><small>Run history captured</small></li>
+        </ol>
+      </div>
+      <div class="comparison-row comparison-row--without">
+        <div class="comparison-row__label"><span class="comparison-row__tag">MANUAL WORKFLOW</span><h3>Without us</h3><p>Keep checking. Keep tracking.</p></div>
+        <ol class="comparison-track" aria-label="Illustrative manual workflow without FlexiFlow">
+          <li><span class="comparison-track__number">01</span><strong>Set timers</strong><small>Track each step</small></li>
+          <li><span class="comparison-track__number">02</span><strong>Make adjustments</strong><small>Follow manual SOPs</small></li>
+          <li><span class="comparison-track__number">03</span><strong>Check repeatedly</strong><small>Monitor readings</small></li>
+          <li><span class="comparison-track__number">04</span><strong>Track additions</strong><small>Record each action</small></li>
+          <li><span class="comparison-track__number">05</span><strong>Compile notes</strong><small>Reconstruct the run</small></li>
+        </ol>
+      </div>
     </div>
-    <p class="approach-section__footnote">Development direction · integration and control safeguards require validation for each application.</p>
+    <p class="comparison-disclaimer">Illustrative comparison of intended workflows. Automation, monitoring and safety functions remain subject to development, equipment integration and validation. Required laboratory supervision and safety procedures still apply.</p>
+    <div class="comparison-cta"><a href="flexiflow.html" class="btn btn-o">Explore how FlexiFlow works <span class="ar" aria-hidden="true">→</span></a></div>
   </div>
 </section>
 
 <section class="application-spotlight" aria-labelledby="application-title">
   <div class="wrap application-spotlight__layout">
     <div>
-      <span class="section-index">// 03 / APPLICATION</span>
+      <span class="section-index">// 03 / APPLICATIONS</span>
       <h2 id="application-title">Automation that belongs <em>on the bench.</em></h2>
       <p>Cooling and antisolvent crystallisation is one example of the recipe-driven workflow we're building for laboratory chemistry.</p>
       <a href="applications.html" class="btn btn-g">Explore applications <span class="ar" aria-hidden="true">→</span></a>

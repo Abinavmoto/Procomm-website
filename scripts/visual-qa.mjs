@@ -34,7 +34,7 @@ for (const { name, w, h } of sizes) {
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(250);
   const m = await page.evaluate(() => {
-    const hero = document.querySelector(".brand-hero");
+    const hero = document.querySelector(".cinematic-hero");
     const h1 = hero.querySelector("h1");
     const products = document.querySelector("#products");
     const cards = [...products.querySelectorAll(".product-card")];
@@ -45,7 +45,7 @@ for (const { name, w, h } of sizes) {
       documentWidth: document.documentElement.scrollWidth,
       viewportWidth: innerWidth,
       bodyWidth: document.body.scrollWidth,
-      h1: rect(h1), products: rect(products),
+      h1: rect(h1), hero: rect(hero), products: rect(products),
       productCards: cards.map(rect),
       img: [...document.images].map(x=>({src:x.src.split("/").pop(),ok:x.complete&&x.naturalWidth>0})),
       visibleText: h1.innerText, headingLines,
@@ -57,6 +57,7 @@ for (const { name, w, h } of sizes) {
   check(m.documentWidth <= w + 2 && m.bodyWidth <= w + 2, name + " no horizontal overflow (" + m.documentWidth + "/" + w + ")");
   check(m.visibleText.toLowerCase().includes("experience") && m.visibleText.toLowerCase().includes("truly automated"),name + " headline");
   check(m.h1.left >= -2 && m.h1.right <= w + 2,name + " headline within viewport");
+  check(m.hero.height >= h - 2,name + " full-viewport photo hero");
   if (name==="1440" || name==="390") check(m.headingLines===2,name+" hero tagline uses exactly two lines (got "+m.headingLines+")");
   check(m.productCards.length===2 && m.productCards.every(c=>c.width > 200),name + " both product cards rendered");
   check(m.img.every(x=>x.ok),name + " images loaded (" + m.img.filter(x=>!x.ok).map(x=>x.src).join(",") + ")");
@@ -64,6 +65,25 @@ for (const { name, w, h } of sizes) {
   if (process.env.QA_BASE64 === "1" && name === "390") {
     const all = await page.screenshot({ type:"jpeg",quality:24,fullPage:true });
     console.log("QA_IMAGE_BEGIN:mobile-full-390:"+all.toString("base64")+":QA_IMAGE_END");
+  }
+  const comparison = await page.locator("#comparison").evaluate(section => {
+    const rows=[...section.querySelectorAll(".comparison-row")];
+    return {
+      visible:getComputedStyle(section).display!=="none",
+      headings:rows.map(row=>row.querySelector("h3")?.textContent.trim()),
+      counts:rows.map(row=>row.querySelectorAll(".comparison-track li").length),
+      width:section.scrollWidth,client:section.clientWidth,
+      cards:rows.map(row=>[...row.querySelectorAll("li")].every(li=>{
+        const st=getComputedStyle(li);return st.display!=="none"&&st.opacity!=="0";
+      }))
+    };
+  });
+  check(comparison.visible && comparison.headings.join("|")==="With us|Without us",name+" With us / Without us present");
+  check(comparison.counts.every(n=>n===5) && comparison.cards.every(Boolean),name+" both five-step tracks visible");
+  check(comparison.width<=comparison.client+2,name+" comparison no horizontal overflow");
+  if (process.env.QA_BASE64==="1" && (name==="390" || name==="1440")) {
+    const pic=await page.locator("#comparison").screenshot({type:"jpeg",quality:30});
+    console.log("QA_IMAGE_BEGIN:comparison-"+name+":"+pic.toString("base64")+":QA_IMAGE_END");
   }
   await page.locator("#products").scrollIntoViewIfNeeded();
   await page.waitForTimeout(200);
@@ -73,7 +93,7 @@ for (const { name, w, h } of sizes) {
     console.log("QA_IMAGE_BEGIN:hardware-card-390:"+image.toString("base64")+":QA_IMAGE_END");
   }
   if (process.env.QA_BASE64 === "1" && name === "1440") {
-    const image = await page.locator(".brand-hero__visual").screenshot({type:"jpeg",quality:32});
+    const image = await page.locator(".cinematic-hero").screenshot({type:"jpeg",quality:32});
     console.log("QA_IMAGE_BEGIN:hero-stage-1440:"+image.toString("base64")+":QA_IMAGE_END");
   }
   if (name === "390") {

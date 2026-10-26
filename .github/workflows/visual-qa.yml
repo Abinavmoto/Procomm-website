@@ -34,7 +34,7 @@ jobs:
           sleep 2
       - name: Visual and interactive QA
         env:
-          QA_BASE64: ${{ github.ref == 'refs/heads/qa-visual-competitor-2026-10-26' && '1' || '0' }}
+          QA_BASE64: ${{ github.head_ref == 'cinematic-hero-compare-2026-10-26' && '1' || '0' }}
         run: node scripts/visual-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
